@@ -7,33 +7,36 @@ echo "const writeMessage = (message: string) => { console.log(message); }; write
 cat << EOF
 Now make the following modifications to tsconfig.
 {
- "compilerOptions": {
-    //...  
-    "target": "ESNEXT", 
-    "rootDir": "src",
-    "allowJs": true,
-    "outDir": "dist", 
-    "strict": true,
-    "moduleResolution": "node", 
-    "esModuleInterop": true,
-    "skipLibCheck": true,
-    "forceConsistentCasingInFileNames": true,
-    // ...
-   },
+  "compilerOptions": {
+      "module": "commonjs",
+      "esModuleInterop": true,
+      "allowSyntheticDefaultImports": true,
+      "target": "es6",
+      "noImplicitAny": true,
+      "moduleResolution": "node",
+      "sourceMap": true,
+      "outDir": "dist",
+      "baseUrl": ".",
+      "paths": {
+          "*": [
+              "node_modules/*",
+              "src/types/*"
+          ]
+      }
+  },
   "include": [
-    "./src/**/*"
-  ],
-  "exclude": [
-    "node_modules"
+      "src/**/*"
   ]
 }
 
 and the following modifications to package.json.
 
   "scripts": {
-    "start-dev": "nodemon --exitcrash --exec ts-node -r dotenv/config src/app.ts",
+    "start-dev": "nodemon --exitcrash --exec ts-node -r dotenv/config src/server.ts",
     "watch-ts": "tsc -w",
-    "lint": "eslint 'src/**/*.{js,ts}' --quiet --fix"
+    "lint": "eslint 'src/**/*.{js,ts}' --quiet --fix",
+    "postinstall": "tsc",
+    "start": "node -r dotenv/config dist/server.js"
   },
 EOF
 
