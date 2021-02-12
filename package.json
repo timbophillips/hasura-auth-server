@@ -5,7 +5,6 @@
   "main": "dist/server.js",
   "scripts": {
     "start-dev": "nodemon --exitcrash --exec ts-node -r dotenv/config src/server.ts",
-    "start-dummy": "nodemon --exitcrash --exec ts-node -r dotenv/config src/cli.ts",
     "watch-ts": "tsc -w",
     "lint": "eslint 'src/**/*.{js,ts}' --quiet --fix",
     "postinstall": "tsc",
