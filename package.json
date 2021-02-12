@@ -2,12 +2,14 @@
   "name": "hasura-auth-server",
   "version": "1.0.0",
   "description": "",
-  "main": "dist/app.js",
+  "main": "dist/server.js",
   "scripts": {
     "start-dev": "nodemon --exitcrash --exec ts-node -r dotenv/config src/server.ts",
     "start-dummy": "nodemon --exitcrash --exec ts-node -r dotenv/config src/cli.ts",
     "watch-ts": "tsc -w",
-    "lint": "eslint 'src/**/*.{js,ts}' --quiet --fix"
+    "lint": "eslint 'src/**/*.{js,ts}' --quiet --fix",
+    "postinstall": "tsc",
+    "start": "node -r dotenv/config dist/server.js"
   },
   "author": "",
   "license": "ISC",
