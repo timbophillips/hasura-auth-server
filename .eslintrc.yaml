@@ -4,9 +4,11 @@ extends:
   - plugin:@typescript-eslint/recommended  
   - prettier/@typescript-eslint  
   - plugin:prettier/recommended  
+  - eslint:recommended
 parser: '@typescript-eslint/parser'  
 parserOptions:  
-  ecmaVersion: 9  
+  ecmaVersion: 12  
   project: ./tsconfig.json  
+  sourceType: module
 plugins:  
  - '@typescript-eslint'
