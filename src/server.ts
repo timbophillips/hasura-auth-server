@@ -62,6 +62,9 @@ app.get('/webhook', (request, response) => {
     }
 
     // send the response
+    console.log(`response status = ${responseStatus}`);
+    console.log(`response body = ${JSON.stringify(hasuraVariables, null, 4)}`);
+
     response.status(responseStatus).json(hasuraVariables);
   });
 });
