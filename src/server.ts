@@ -43,9 +43,6 @@ app.get('/webhook', (request, response) => {
   let responseStatus: number;
 
   CheckCredentials(decodedCredentials).then((credentials) => {
-    console.log(
-      `result from credcheck = ${JSON.stringify(credentials, null, 4)}`
-    );
     // if we've found a matching user ID
     // and the password is correct
     if (credentials.exists && credentials.pwCorrect) {
@@ -65,9 +62,6 @@ app.get('/webhook', (request, response) => {
     }
 
     // send the response
-    console.log(`response status = ${responseStatus}`);
-    console.log(`response body = ${JSON.stringify(hasuraVariables, null, 4)}`);
-
     response.status(responseStatus).json(hasuraVariables);
   });
 });
