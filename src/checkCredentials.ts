@@ -20,6 +20,9 @@ export async function CheckCredentials(credentials: {
 }> {
   const userFromDB = await GetUser(credentials.username);
   const encryptedPassword = encryptionLibrary.encrypt(credentials.password);
+  console.log(
+    `supplied password = ${credentials.password}... enrypted version = ${encryptedPassword}... DB password = ${userFromDB.password}`
+  );
   return {
     exists: userFromDB ? true : false,
     pwCorrect: encryptedPassword == userFromDB?.password ? true : false,
