@@ -43,7 +43,9 @@ app.get('/webhook', (request, response) => {
   let responseStatus: number;
 
   CheckCredentials(decodedCredentials).then((credentials) => {
-    console.log(`result from credcheck = ${credentials}`)
+    console.log(
+      `result from credcheck = ${JSON.stringify(credentials, null, 4)}`
+    );
     // if we've found a matching user ID
     // and the password is correct
     if (credentials.exists && credentials.pwCorrect) {
