@@ -4,6 +4,7 @@
   "description": "",
   "main": "dist/server.js",
   "scripts": {
+    "start-sandpit": "nodemon --exitcrash --exec ts-node -r dotenv/config src/cli.ts",
     "start-dev": "nodemon --exitcrash --exec ts-node -r dotenv/config src/server.ts",
     "watch-ts": "tsc -w",
     "lint": "eslint 'src/**/*.{js,ts}' --quiet --fix",

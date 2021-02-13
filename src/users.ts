@@ -58,3 +58,32 @@ export async function GetUser(username: string): Promise<User> {
   });
   return result.data['users'][0] as User;
 }
+
+export async function ChangePassword(
+  userID: number,
+  newPassword: string
+): Promise<User> {
+  const result = await client.mutate({
+    mutation: gql`
+      mutation ChangePassword($user_id: Int, $new_password: String) {
+        update_users(
+          where: { id: { _eq: $user_id } }
+          _set: { password: $new_password }
+        ) {
+          affected_rows
+          returning {
+            id
+            username
+            role
+            password
+          }
+        }
+      }
+    `,
+    variables: {
+      user_id: userID,
+      new_password: newPassword,
+    },
+  });
+  return result.data.update_users.returning as User;
+}
