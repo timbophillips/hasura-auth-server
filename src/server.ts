@@ -42,13 +42,14 @@ app.get('/webhook', (request, response) => {
   };
   let responseStatus: number;
 
-  CheckCredentials(decodedCredentials).then((result) => {
+  CheckCredentials(decodedCredentials).then((credentials) => {
+    console.log(`result from credcheck = ${credentials}`)
     // if we've found a matching user ID
     // and the password is correct
-    if (result.exists && result.pwCorrect) {
+    if (credentials.exists && credentials.pwCorrect) {
       hasuraVariables = {
-        'X-Hasura-Role': result.role || '',
-        'X-Hasura-User-Id': result.userID.toString(),
+        'X-Hasura-Role': credentials.role || '',
+        'X-Hasura-User-Id': credentials.userID.toString(),
       };
       responseStatus = 200;
     } else {
@@ -56,7 +57,7 @@ app.get('/webhook', (request, response) => {
       hasuraVariables = {
         // articulate what is wong (Hasura doesn't use this
         // but might be useful for front end app)
-        error: !result.exists ? 'invalid username' : 'wrong password',
+        error: !credentials.exists ? 'invalid username' : 'wrong password',
       };
       responseStatus = 401;
     }
