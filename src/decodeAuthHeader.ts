@@ -17,7 +17,7 @@ export function decodeAuthHeader(
   )
     .toString()
     .split(':');
-
+  console.log(`decoded to username=|${username}| password=|${password}|`);
   // roll up the two strings as a neat little object
   return { username: username, password: password };
 }
