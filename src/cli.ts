@@ -1,4 +1,4 @@
-import { GetAllUsers, GetUser, ChangePassword } from './users';
+import { GetAllUsers, GetUser, UpdatePassword } from './users';
 import { CheckCredentials } from './checkCredentials';
 
 // let users: Array<User> = [];
@@ -18,4 +18,4 @@ GetUser('Dad').then(console.log);
 
 CheckCredentials({ username: 'Dad', password: 'password' }).then(console.log);
 
-ChangePassword(2, 'thisisnewIlikeIt').then(console.log);
+UpdatePassword(2, 'thisisnewIlikeIt').then(console.log);

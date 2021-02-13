@@ -59,13 +59,16 @@ export async function GetUser(username: string): Promise<User> {
   return result.data['users'][0] as User;
 }
 
-export async function ChangePassword(
+export async function UpdatePassword(
+  // note that this function is agnostic
+  // to the encryption and should recieve the
+  // already encrypted version of the password
   userID: number,
   newPassword: string
 ): Promise<User> {
   const result = await client.mutate({
     mutation: gql`
-      mutation ChangePassword($user_id: Int, $new_password: String) {
+      mutation UpdatePassword($user_id: Int, $new_password: String) {
         update_users(
           where: { id: { _eq: $user_id } }
           _set: { password: $new_password }
@@ -85,5 +88,5 @@ export async function ChangePassword(
       new_password: newPassword,
     },
   });
-  return result.data.update_users.returning as User;
+  return result.data.update_users.returning[0] as User;
 }

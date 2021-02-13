@@ -1,4 +1,4 @@
-import { GetUser } from './users';
+import { User, GetUser, UpdatePassword } from './users';
 import { Encryption } from './encryption';
 
 const config = {
@@ -16,7 +16,7 @@ export async function CheckCredentials(credentials: {
   exists: boolean;
   pwCorrect: boolean;
   role: string;
-  userID: string;
+  userID: number;
 }> {
   const userFromDB = await GetUser(credentials.username);
   const encryptedPassword = encryptionLibrary.encrypt(credentials.password);
@@ -24,6 +24,15 @@ export async function CheckCredentials(credentials: {
     exists: userFromDB ? true : false,
     pwCorrect: encryptedPassword == userFromDB?.password ? true : false,
     role: userFromDB?.role || '',
-    userID: userFromDB ? userFromDB.id.toString() : '',
+    userID: userFromDB ? userFromDB.id : -1,
   };
+}
+
+export async function ChangePassword(
+  userID: number,
+  newPassword: string
+): Promise<User> {
+  const encryptedNewPassword = encryptionLibrary.encrypt(newPassword);
+  const updatedUserFromDB = await UpdatePassword(userID, encryptedNewPassword);
+  return updatedUserFromDB;
 }
