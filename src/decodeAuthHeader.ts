@@ -20,3 +20,12 @@ export function decodeAuthHeader(
   // roll up the two strings as a neat little object
   return { username: username, password: password };
 }
+
+export function splitUsernameAndPassword(
+  userPass: string
+): { username: string; password: string } {
+  const [username, password] = userPass.split(':');
+  // roll up the two strings as a neat little object
+  console.log(`${userPass} split into ${username} and ${password}`);
+  return { username: username, password: password };
+}
