@@ -10,7 +10,7 @@ export type User = {
   password: string;
   role: string;
   __typename: string;
-  roles?: Array<string>;
+  roles: Array<string>;
 };
 
 const hasuraGraphQLEndpoint = process.env.HASURA_GRAPHQL_ENDPOINT;
@@ -52,6 +52,7 @@ export async function GetUser(username: string): Promise<User> {
           username
           password
           role
+          roles
         }
       }
     `,

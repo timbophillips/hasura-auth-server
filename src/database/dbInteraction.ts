@@ -9,6 +9,7 @@ export async function CheckCredentialsInDB(credentials: {
   pwCorrect: boolean;
   role: string;
   userID: number;
+  roles?: Array<string>;
 }> {
   const userFromDB = await GetUser(credentials.username);
 
@@ -19,6 +20,7 @@ export async function CheckCredentialsInDB(credentials: {
       : false,
     role: userFromDB?.role || '',
     userID: userFromDB ? userFromDB.id : -1,
+    roles: userFromDB.roles || [userFromDB.role],
   };
 }
 
