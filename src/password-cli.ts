@@ -1,4 +1,4 @@
-import { splitUsernameAndPassword } from './decodeAuthHeader';
+import { splitUsernameAndPassword } from './tools/decodeAuthHeader';
 import btoa from 'btoa';
 import { hashSync, compareSync } from 'bcryptjs';
 

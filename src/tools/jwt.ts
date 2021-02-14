@@ -1,5 +1,5 @@
 import { sign, Algorithm, Secret } from 'jsonwebtoken';
-import { User } from './users';
+import { User } from '../database/graphql';
 
 const jwtTokenExpires = process.env.JWT_TOKEN_EXPIRES;
 

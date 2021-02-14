@@ -1,7 +1,7 @@
-import { User, GetUser, UpdatePassword } from './users';
+import { User, GetUser, UpdatePassword } from './graphql';
 import { hashSync, compareSync } from 'bcryptjs';
 
-export async function CheckCredentials(credentials: {
+export async function CheckCredentialsInDB(credentials: {
   username: string;
   password: string;
 }): Promise<{
@@ -11,9 +11,6 @@ export async function CheckCredentials(credentials: {
   userID: number;
 }> {
   const userFromDB = await GetUser(credentials.username);
-
-  console.log(`hash from DB = ${userFromDB.password}`);
-  console.log(`hash of password = ${hashSync(credentials.password, 7)}`);
 
   return {
     exists: userFromDB ? true : false,
@@ -25,7 +22,7 @@ export async function CheckCredentials(credentials: {
   };
 }
 
-export async function ChangePassword(
+export async function UpdatePasswordInDB(
   userID: number,
   newPassword: string
 ): Promise<User> {

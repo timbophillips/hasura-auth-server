@@ -1,5 +1,5 @@
-import { decodeAuthHeader } from './decodeAuthHeader';
-import { CheckCredentials } from './checkCredentials';
+import { decodeAuthHeader } from '../tools/decodeAuthHeader';
+import { CheckCredentialsInDB } from '../database/dbInteraction';
 
 import { Request, Response } from 'express';
 
@@ -15,7 +15,7 @@ export function webhook(request: Request, response: Response): void {
   };
   let responseStatus: number;
 
-  CheckCredentials(decodedCredentials).then((credentials) => {
+  CheckCredentialsInDB(decodedCredentials).then((credentials) => {
     // if we've found a matching user ID
     // and the password is correct
     if (credentials.exists && credentials.pwCorrect) {
