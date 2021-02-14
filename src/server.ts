@@ -20,6 +20,7 @@ const port = process.env.PORT || 3000;
 
 import { decodeAuthHeader } from './decodeAuthHeader';
 import { CheckCredentials, ChangePassword } from './checkCredentials';
+import { webhook } from './webhook';
 
 // how to make express work in TS
 import express, { json } from 'express';
@@ -30,41 +31,7 @@ app.get('/', (_req, res) => {
   res.send('Hasura webhooks authorisation server running');
 });
 
-app.get('/webhook', (request, response) => {
-  // decode the HTML header into username and (base65 decoded) password
-  const decodedCredentials = decodeAuthHeader(request);
-
-  // variables for HTTP response
-  let hasuraVariables: {
-    'X-Hasura-Role'?: string;
-    'X-Hasura-User-Id'?: string;
-    error?: string;
-  };
-  let responseStatus: number;
-
-  CheckCredentials(decodedCredentials).then((credentials) => {
-    // if we've found a matching user ID
-    // and the password is correct
-    if (credentials.exists && credentials.pwCorrect) {
-      hasuraVariables = {
-        'X-Hasura-Role': credentials.role || '',
-        'X-Hasura-User-Id': credentials.userID.toString(),
-      };
-      responseStatus = 200;
-    } else {
-      // if something is wrong
-      hasuraVariables = {
-        // articulate what is wong (Hasura doesn't use this
-        // but might be useful for front end app)
-        error: !credentials.exists ? 'invalid username' : 'wrong password',
-      };
-      responseStatus = 401;
-    }
-
-    // send the response
-    response.status(responseStatus).json(hasuraVariables);
-  });
-});
+app.get('/webhook', webhook);
 
 app.post('/changepassword', (request, response) => {
   // this POST accepts the Auth base64 credentials
@@ -138,6 +105,8 @@ app.post('/changepassword', (request, response) => {
     }
   });
 });
+
+app.get('/login', (request, response) => {});
 
 // listen for requests
 // standed Express stuff

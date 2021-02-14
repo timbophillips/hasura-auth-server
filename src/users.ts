@@ -10,6 +10,7 @@ export type User = {
   password: string;
   role: string;
   __typename: string;
+  roles?: Array<string>;
 };
 
 const hasuraGraphQLEndpoint = process.env.HASURA_GRAPHQL_ENDPOINT;
