@@ -2,7 +2,6 @@ import { sign, Algorithm, Secret } from 'jsonwebtoken';
 import { User } from '../database/graphql';
 
 const jwtTokenExpires = process.env.JWT_TOKEN_EXPIRES;
-
 const hasuraGraphqlJWTSecret: { type: Algorithm; key: Secret } = JSON.parse(
   process.env.HASURA_GRAPHQL_JWT_SECRET
 );
@@ -10,13 +9,15 @@ const hasuraGraphqlJWTSecret: { type: Algorithm; key: Secret } = JSON.parse(
 export async function genJWT(
   user: User
 ): Promise<{ token: string; refreshToken: string }> {
-  const rolesPlusRole = (user.roles || []).concat(user.role);
-  const rolesNoDupes = [...new Set(rolesPlusRole)];
-
+  // this bit of JS trickery
+  // subs in a empty array if user.roles doesn't exist - using || []
+  // adds the user.role in to the array user.roles - using concat
+  // and then deletes duplicates - using [... new Set()]
+  const roles = [...new Set((user.roles || []).concat(user.role))];
   const token = sign(
     {
       'https://hasura.io/jwt/claims': {
-        'x-hasura-allowed-roles': rolesNoDupes,
+        'x-hasura-allowed-roles': roles,
         'x-hasura-default-role': user.role,
         'x-hasura-role': user.role,
         'x-hasura-user-id': user.id.toString(),
