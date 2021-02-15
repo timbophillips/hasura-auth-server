@@ -10,10 +10,13 @@ const hasuraGraphqlJWTSecret: { type: Algorithm; key: Secret } = JSON.parse(
 export async function genJWT(
   user: User
 ): Promise<{ token: string; refreshToken: string }> {
+  const rolesPlusRole = (user.roles || []).concat(user.role);
+  const rolesNoDupes = [...new Set(rolesPlusRole)];
+
   const token = sign(
     {
       'https://hasura.io/jwt/claims': {
-        'x-hasura-allowed-roles': user.roles || [],
+        'x-hasura-allowed-roles': rolesNoDupes,
         'x-hasura-default-role': user.role,
         'x-hasura-role': user.role,
         'x-hasura-user-id': user.id.toString(),

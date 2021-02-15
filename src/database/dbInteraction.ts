@@ -12,7 +12,6 @@ export async function CheckCredentialsInDB(credentials: {
   roles?: Array<string>;
 }> {
   const userFromDB = await GetUser(credentials.username);
-
   return {
     exists: userFromDB ? true : false,
     pwCorrect: userFromDB
@@ -32,3 +31,5 @@ export async function UpdatePasswordInDB(
   const updatedUserFromDB = await UpdatePassword(userID, encryptedNewPassword);
   return updatedUserFromDB;
 }
+
+//export async function 
