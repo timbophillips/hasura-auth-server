@@ -1,5 +1,5 @@
 import { splitUsernameAndPassword } from './tools/decodeAuthHeader';
-import { genJWT } from './tools/jwt';
+import { generateJWT } from './tools/jwt';
 import { GetUser } from './database/graphql';
 
 import btoa from 'btoa';
@@ -11,7 +11,7 @@ const { username, password } = splitUsernameAndPassword(nudeUsernamePassword);
 const hash = hashSync(password, 7);
 
 GetUser(username)
-  .then((user) => genJWT(user))
+  .then((user) => generateJWT(user, '0.0.0.0'))
   .then((jwt) => console.log(`JWT=${jwt.token}`));
 
 console.log(

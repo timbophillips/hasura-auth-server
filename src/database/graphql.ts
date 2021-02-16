@@ -92,3 +92,57 @@ export async function UpdatePassword(
   });
   return result.data.update_users.returning[0] as User;
 }
+
+const CheckRefreshTokenGQL = gql`
+  query RefreshToken($token: String) {
+    refresh_tokens(where: { token: { _eq: $token } }) {
+      created_by_ip
+      expires
+      token
+      user
+    }
+  }
+`;
+
+const AddTokenGQL = gql`
+  mutation AddToken(
+    $created_by_ip: String
+    $expires: timestamptz
+    $token: String
+    $user: Int
+  ) {
+    insert_refresh_tokens(
+      objects: [
+        {
+          created_by_ip: $created_by_ip
+          expires: $expires
+          token: $token
+          user: $user
+        }
+      ]
+    ) {
+      returning {
+        created_by_ip
+        expires
+        token
+        user
+      }
+    }
+  }
+`;
+
+const DeletTokenGQL = gql`
+  mutation DeleteToken($token: String) {
+    delete_refresh_tokens(where: { token: { _eq: $token } }) {
+      affected_rows
+    }
+  }
+`;
+
+const DeleteAllTokensOfUserGQL = gql`
+  mutation DeleteTokensOfUSer($user: Int) {
+    delete_refresh_tokens(where: { user: { _eq: $user } }) {
+      affected_rows
+    }
+  }
+`;
