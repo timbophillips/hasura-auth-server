@@ -194,7 +194,7 @@ export async function GetRefreshToken(
       }
     `,
     variables: { token: tokenString },
-    // this is necessary so it doesn't 'find' 
+    // this is necessary so it doesn't 'find'
     // tokens in the cache that have been deleted
     // from the database
     fetchPolicy: 'no-cache',
@@ -227,16 +227,21 @@ export async function DeleteToken(tokenString: string): Promise<RefreshToken> {
   });
   return result.data.delete_refresh_tokens.returning[0] as RefreshToken;
 }
-export async function DeleteAllTokensOfUser(userId: number): Promise<number> {
+export async function DeleteAllTokensOfUser(
+  userId: number
+): Promise<Array<{ token: string }>> {
   const result = await client.mutate({
     mutation: gql`
       mutation DeleteTokensOfUSer($user: Int) {
         delete_refresh_tokens(where: { user: { _eq: $user } }) {
           affected_rows
+          returning {
+            token
+          }
         }
       }
     `,
     variables: { user: userId },
   });
-  return result.data.delete_refresh_tokens.affected_rows as number;
+  return result.data.delete_refresh_tokens.returning;
 }
