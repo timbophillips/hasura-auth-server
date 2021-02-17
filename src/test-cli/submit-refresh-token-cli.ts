@@ -1,11 +1,3 @@
-import { generateTokens } from '../tools/jwt';
-import {
-  CheckRefreshToken,
-  GetUserByIdWithoutPassword,
-} from '../database/graphql';
+import { CheckRefreshToken } from '../database/dbInteraction';
 
-CheckRefreshToken(process.argv[2]).then((token) => {
-  GetUserByIdWithoutPassword(token.user).then((user) => {
-    generateTokens(user, '0.0.0.0').then(console.log);
-  });
-});
+CheckRefreshToken(process.argv[2]).then(console.log);

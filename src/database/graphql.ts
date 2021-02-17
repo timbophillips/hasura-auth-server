@@ -154,7 +154,7 @@ export async function AddToken(token: RefreshToken): Promise<RefreshToken> {
   });
   return result.data.insert_refresh_tokens.returning[0] as RefreshToken;
 }
-export async function CheckRefreshToken(
+export async function GetRefreshToken(
   tokenString: string
 ): Promise<RefreshToken> {
   const result = await client.query({

@@ -20,12 +20,11 @@ export async function generateTokens(
   user: User | UserWithoutPassword,
   ip: string
 ): Promise<{ jwt: string; refreshToken: RefreshToken }> {
-  return Promise.all([
+  const [jwt, refreshToken] = await Promise.all([
     generateJWT(user, ip),
     generateRefreshToken(user, ip),
-  ]).then(([jwt, refreshToken]) => {
-    return { jwt: jwt, refreshToken: refreshToken };
-  });
+  ]);
+  return { jwt: jwt, refreshToken: refreshToken };
 }
 
 async function generateJWT(

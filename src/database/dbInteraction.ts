@@ -1,5 +1,14 @@
-import { User, UserWithoutPassword, GetUser, UpdatePassword } from './graphql';
+import {
+  User,
+  UserWithoutPassword,
+  GetUser,
+  UpdatePassword,
+  RefreshToken,
+  GetRefreshToken,
+  GetUserByIdWithoutPassword,
+} from './graphql';
 import { hashSync, compareSync } from 'bcryptjs';
+import { generateTokens } from '../tools/jwt';
 
 export async function CheckCredentialsInDB(credentials: {
   username: string;
@@ -28,4 +37,16 @@ function RemovePasswordFromUser(user: User): UserWithoutPassword {
   // eslint-disable-next-line no-unused-vars, @typescript-eslint/no-unused-vars
   const { password: pw, ...userWithoutPassword } = user;
   return userWithoutPassword;
+}
+
+export async function CheckRefreshToken(
+  token: string
+): Promise<{ jwt: string; refreshToken: RefreshToken }> {
+  const tokenFromDB = await GetRefreshToken(token);
+  // if the token has expired then throw an error
+  if (new Date(tokenFromDB.expires) < new Date(Date.now())) {
+    throw new Error('token expired');
+  }
+  const user = await GetUserByIdWithoutPassword(tokenFromDB.user);
+  return generateTokens(user, '0.0.0.0');
 }
