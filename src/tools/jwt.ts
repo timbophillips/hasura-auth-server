@@ -1,6 +1,7 @@
 import { sign, Algorithm, Secret } from 'jsonwebtoken';
 import { User } from '../database/graphql';
 import { randomBytes } from 'crypto';
+import { RefreshToken, AddToken } from '../database/graphql';
 
 const jwtTokenExpiresMins = process.env.JWT_TOKEN_EXPIRES_MINS;
 const refreshTokenExpiresDays = parseInt(
@@ -48,16 +49,18 @@ export async function generateJWT(
 export async function generateRefreshToken(
   user: User,
   ip: string
-): Promise<Record<string, unknown>> {
+): Promise<RefreshToken> {
   // create a refresh token that expires in x days
-  return {
-    user: user.id.toString(),
+  const token: RefreshToken = {
+    user: user.id,
     token: randomTokenString(),
     expires: new Date(
       Date.now() + refreshTokenExpiresDays * 24 * 60 * 60 * 1000
-    ).toUTCString(),
-    createdByIp: ip,
+    ),
+    ip: ip,
   };
+
+  return await AddToken(token);
 }
 
 function randomTokenString() {

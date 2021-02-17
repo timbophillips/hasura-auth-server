@@ -1,13 +1,13 @@
 import express from 'express';
 import atob from 'atob';
 
-export function decodeAuthHeader(
+export async function decodeAuthHeader(
   // accepts an express request
   request: express.Request
 ): // and then returns
 // strings from the HTTP Basic authorization
 // header as an object
-{ username: string; password: string } {
+Promise<{ username: string; hashPassword: string }> {
   // minor JS Array ninja to get the auth header
   // Split by [space] to separate <type> (eg 'Basic') from the
   // base64 encoded <credentials> which should be in username:password format
@@ -18,7 +18,7 @@ export function decodeAuthHeader(
     .toString()
     .split(':');
   // roll up the two strings as a neat little object
-  return { username: username, password: password };
+  return { username: username, hashPassword: password };
 }
 
 export function splitUsernameAndPassword(

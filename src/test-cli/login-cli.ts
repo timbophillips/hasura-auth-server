@@ -1,26 +1,20 @@
-import { splitUsernameAndPassword } from './tools/decodeAuthHeader';
-import { generateJWT } from './tools/jwt';
-import {
-  GetUser,
-  CheckRefreshToken,
-  User,
-  UserWithoutPassword,
-} from './database/graphql';
+import { splitUsernameAndPassword } from '../tools/decodeAuthHeader';
+import { generateJWT } from '../tools/jwt';
+import { GetUser, CheckRefreshToken } from '../database/graphql';
+import { CheckCredentialsInDB } from '../database/dbInteraction';
 
 import btoa from 'btoa';
 import { hashSync, compareSync } from 'bcryptjs';
 
-const nudeUsernamePassword = process.argv[2];
-const tokenString: string | undefined = process.argv[3];
-const { username, password } = splitUsernameAndPassword(nudeUsernamePassword);
+// const nudeUsernamePassword = process.argv[2];
+const { username, password } = splitUsernameAndPassword(process.argv[2]);
+
+CheckCredentialsInDB({ username, hashPassword: password }).then((result) => {});
 
 const hash = hashSync(password, 7);
 
 GetUser(username)
-  .then((user) => {
-    console.log(user as UserWithoutPassword);
-    return generateJWT(user, '0.0.0.0');
-  })
+  .then((user) => generateJWT(user, '0.0.0.0'))
   .then(console.log);
 
 if (tokenString) {
