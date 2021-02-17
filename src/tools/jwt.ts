@@ -1,7 +1,11 @@
 import { sign, Algorithm, Secret } from 'jsonwebtoken';
-import { User } from '../database/graphql';
 import { randomBytes } from 'crypto';
-import { RefreshToken, AddToken } from '../database/graphql';
+import {
+  User,
+  RefreshToken,
+  AddToken,
+  UserWithoutPassword,
+} from '../database/graphql';
 
 const jwtTokenExpiresMins = process.env.JWT_TOKEN_EXPIRES_MINS;
 const refreshTokenExpiresDays = parseInt(
@@ -12,16 +16,29 @@ const hasuraGraphqlJWTSecret: { type: Algorithm; key: Secret } = JSON.parse(
   process.env.HASURA_GRAPHQL_JWT_SECRET
 );
 
-export async function generateJWT(
-  user: User,
+export async function generateTokens(
+  user: User | UserWithoutPassword,
   ip: string
-): Promise<{ token: string; refreshToken: Record<string, unknown> }> {
+): Promise<{ jwt: string; refreshToken: RefreshToken }> {
+  return Promise.all([
+    generateJWT(user, ip),
+    generateRefreshToken(user, ip),
+  ]).then(([jwt, refreshToken]) => {
+    return { jwt: jwt, refreshToken: refreshToken };
+  });
+}
+
+async function generateJWT(
+  user: User | UserWithoutPassword,
+  ip: string
+): Promise<string> {
   // this bit of JS trickery
   // subs in a empty array if user.roles doesn't exist - using || []
   // adds the user.role in to the array user.roles - using concat
   // and then deletes duplicates - using [... new Set()]
   const roles = [...new Set((user.roles || []).concat(user.role))];
-  const token = sign(
+  // create and return the token
+  return sign(
     {
       'https://hasura.io/jwt/claims': {
         'x-hasura-allowed-roles': roles,
@@ -39,15 +56,10 @@ export async function generateJWT(
       expiresIn: `${jwtTokenExpiresMins}m`,
     }
   );
-  //    return jwt.sign({ sub: user.id, id: user.id }, config.secret, { expiresIn: '15m' });
-
-  const refreshToken = generateRefreshToken(user, ip);
-
-  return { token: token, refreshToken: await refreshToken };
 }
 
-export async function generateRefreshToken(
-  user: User,
+async function generateRefreshToken(
+  user: User | UserWithoutPassword,
   ip: string
 ): Promise<RefreshToken> {
   // create a refresh token that expires in x days

@@ -11,10 +11,15 @@ export function ChangePassword(request: Request, response: Response): void {
     // decode the HTML header into username and (base65 decoded) password
     DecodeAuthHeader(request)
       .then((decodedCredentials) => {
+        // check the credentials
         CheckCredentialsInDB(decodedCredentials)
           .then((result) => {
-            UpdatePasswordInDB(result.userID, request.body['newpassword']).then(
+            // update the password in the database
+            UpdatePasswordInDB(result.id, request.body['newpassword']).then(
               (user) => {
+                console.log(
+                  `password for ${user.username} successfully changed`
+                );
                 response.status(200).json({
                   message: `password for ${user.username} successfully changed`,
                 });
@@ -22,13 +27,18 @@ export function ChangePassword(request: Request, response: Response): void {
             );
           })
           .catch((error: Error) => {
-            console.log(error);
+            console.error(error.message);
             response.status(401).json({ error: error.message });
           });
       })
       .catch((error: Error) => {
-        console.log(error);
+        console.error(error.message);
         response.status(401).json({ error: error.message });
       });
+  } else {
+    console.error('newpassword header not found in posted HTTP');
+    response
+      .status(401)
+      .json({ error: 'newpassword header not found in posted HTTP' });
   }
 }

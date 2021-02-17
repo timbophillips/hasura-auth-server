@@ -1,25 +1,14 @@
-import { User, GetUser, UpdatePassword } from './graphql';
+import { User, UserWithoutPassword, GetUser, UpdatePassword } from './graphql';
 import { hashSync, compareSync } from 'bcryptjs';
 
 export async function CheckCredentialsInDB(credentials: {
   username: string;
-  hashPassword: string;
-}): Promise<{
-  exists: boolean;
-  pwCorrect: boolean;
-  role: string;
-  userID: number;
-  roles?: Array<string>;
-}> {
+  nudePassword: string;
+}): Promise<UserWithoutPassword> {
   return GetUser(credentials.username).then((userFromDB) => {
-    if (compareSync(credentials.hashPassword, userFromDB.password)) {
-      return {
-        exists: userFromDB ? true : false,
-        pwCorrect: true,
-        role: userFromDB?.role || '',
-        userID: userFromDB ? userFromDB.id : -1,
-        roles: userFromDB.roles || [userFromDB.role],
-      };
+    if (compareSync(credentials.nudePassword, userFromDB.password)) {
+      delete userFromDB.password;
+      return RemovePasswordFromUser(userFromDB);
     } else {
       throw new Error('username found but password incorrect');
     }
@@ -33,6 +22,12 @@ export async function UpdatePasswordInDB(
   const encryptedNewPassword = hashSync(newPassword, 7);
   const updatedUserFromDB = await UpdatePassword(userID, encryptedNewPassword);
   return updatedUserFromDB;
+}
+
+function RemovePasswordFromUser(user: User): UserWithoutPassword {
+  // eslint-disable-next-line no-unused-vars, @typescript-eslint/no-unused-vars
+  const { password: pw, ...userWithoutPassword } = user;
+  return userWithoutPassword;
 }
 
 // export async function CheckOldPasswordAndUpdateWithNewInDB(
