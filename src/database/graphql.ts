@@ -98,24 +98,6 @@ export async function GetUserWithoutPassword(
     throw new Error('username not found in database');
   }
 }
-
-export async function GetUserByIdWithoutPassword(
-  id: number
-): Promise<UserWithoutPassword> {
-  const result = await client.query({
-    query: GetUserByIdWithoutPasswordGQL,
-    variables: { id },
-  });
-  const userWithoutPassword = result.data['users'][0] as
-    | UserWithoutPassword
-    | undefined;
-  if (userWithoutPassword) {
-    return userWithoutPassword;
-  } else {
-    throw new Error('username not found in database');
-  }
-}
-
 export async function UpdatePassword(
   // note that this function is agnostic
   // to the encryption and should recieve the
@@ -147,9 +129,52 @@ export async function UpdatePassword(
   });
   return result.data.update_users.returning[0] as User;
 }
+export async function GetUserByIdWithoutPassword(
+  id: number
+): Promise<UserWithoutPassword> {
+  const result = await client.query({
+    query: gql`
+      query GetUSerByIdNoPassword($id: Int) {
+        users(where: { id: { _eq: $id } }) {
+          id
+          role
+          roles
+          username
+        }
+      }
+    `,
+    variables: { id },
+  });
+  const userWithoutPassword = result.data['users'][0] as
+    | UserWithoutPassword
+    | undefined;
+  if (userWithoutPassword) {
+    return userWithoutPassword;
+  } else {
+    throw new Error('username not found in database');
+  }
+}
 export async function AddToken(token: RefreshToken): Promise<RefreshToken> {
   const result = await client.mutate({
-    mutation: AddTokenGQL,
+    mutation: gql`
+      mutation AddToken(
+        $ip: String
+        $expires: timestamptz
+        $token: String
+        $user: Int
+      ) {
+        insert_refresh_tokens(
+          objects: [{ ip: $ip, expires: $expires, token: $token, user: $user }]
+        ) {
+          returning {
+            ip
+            expires
+            token
+            user
+          }
+        }
+      }
+    `,
     variables: token,
   });
   return result.data.insert_refresh_tokens.returning[0] as RefreshToken;
@@ -158,7 +183,16 @@ export async function GetRefreshToken(
   tokenString: string
 ): Promise<RefreshToken> {
   const result = await client.query({
-    query: CheckRefreshTokenGQL,
+    query: gql`
+      query RefreshToken($token: String) {
+        refresh_tokens(where: { token: { _eq: $token } }) {
+          ip
+          expires
+          token
+          user
+        }
+      }
+    `,
     variables: { token: tokenString },
   });
   const token = result.data['refresh_tokens'][0] as RefreshToken;
@@ -170,60 +204,35 @@ export async function GetRefreshToken(
     throw new Error('token not found in database');
   }
 }
-
-const CheckRefreshTokenGQL = gql`
-  query RefreshToken($token: String) {
-    refresh_tokens(where: { token: { _eq: $token } }) {
-      ip
-      expires
-      token
-      user
-    }
-  }
-`;
-
-const AddTokenGQL = gql`
-  mutation AddToken(
-    $ip: String
-    $expires: timestamptz
-    $token: String
-    $user: Int
-  ) {
-    insert_refresh_tokens(
-      objects: [{ ip: $ip, expires: $expires, token: $token, user: $user }]
-    ) {
-      returning {
-        ip
-        expires
-        token
-        user
+export async function DeleteToken(tokenString: string): Promise<RefreshToken> {
+  const result = await client.mutate({
+    mutation: gql`
+      mutation DeleteToken($token: String) {
+        delete_refresh_tokens(where: { token: { _eq: $token } }) {
+          affected_rows
+          returning {
+            expires
+            ip
+            token
+            user
+          }
+        }
       }
-    }
-  }
-`;
-
-const GetUserByIdWithoutPasswordGQL = gql`
-  query GetUSerByIdNoPassword($id: Int) {
-    users(where: { id: { _eq: $id } }) {
-      id
-      role
-      roles
-      username
-    }
-  }
-`;
-// const DeleteTokenGQL = gql`
-//   mutation DeleteToken($token: String) {
-//     delete_refresh_tokens(where: { token: { _eq: $token } }) {
-//       affected_rows
-//     }
-//   }
-// `;
-
-// const DeleteAllTokensOfUserGQL = gql`
-//   mutation DeleteTokensOfUSer($user: Int) {
-//     delete_refresh_tokens(where: { user: { _eq: $user } }) {
-//       affected_rows
-//     }
-//   }
-// `;
+    `,
+    variables: { token: tokenString },
+  });
+  return result.data.delete_refresh_tokens.returning[0] as RefreshToken;
+}
+export async function DeleteAllTokensOfUser(userId: number): Promise<number> {
+  const result = await client.mutate({
+    mutation: gql`
+      mutation DeleteTokensOfUSer($user: Int) {
+        delete_refresh_tokens(where: { user: { _eq: $user } }) {
+          affected_rows
+        }
+      }
+    `,
+    variables: { user: userId },
+  });
+  return result.data.delete_refresh_tokens.affected_rows as number;
+}

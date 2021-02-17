@@ -70,7 +70,6 @@ async function generateRefreshToken(
     ),
     ip: ip,
   };
-
   return await AddToken(token);
 }
 
