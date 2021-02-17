@@ -194,6 +194,10 @@ export async function GetRefreshToken(
       }
     `,
     variables: { token: tokenString },
+    // this is necessary so it doesn't 'find' 
+    // tokens in the cache that have been deleted
+    // from the database
+    fetchPolicy: 'no-cache',
   });
   const token = result.data['refresh_tokens'][0] as RefreshToken;
   // if it exists return the promise for a then()
