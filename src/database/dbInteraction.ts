@@ -29,20 +29,3 @@ function RemovePasswordFromUser(user: User): UserWithoutPassword {
   const { password: pw, ...userWithoutPassword } = user;
   return userWithoutPassword;
 }
-
-// export async function CheckOldPasswordAndUpdateWithNewInDB(
-//   username: string,
-//   hashPassword: string,
-//   newPassword: string
-// ): Promise<User> {
-//   CheckCredentialsInDB({ username, hashPassword }).then((credentials) => {
-//     const encryptedNewPassword = hashSync(newPassword, 7);
-//     const updatedUserFromDB = await UpdatePassword(
-//       credentials.userID,
-//       encryptedNewPassword
-//     );
-//   });
-//   return updatedUserFromDB;
-// }
-
-//export async function

@@ -3,7 +3,6 @@ import { ApolloClient } from 'apollo-client';
 import { createHttpLink } from 'apollo-link-http';
 import { InMemoryCache } from 'apollo-cache-inmemory';
 import fetch from 'cross-fetch';
-import { Token } from 'graphql';
 
 export type User = {
   id: number;
@@ -99,6 +98,24 @@ export async function GetUserWithoutPassword(
     throw new Error('username not found in database');
   }
 }
+
+export async function GetUserByIdWithoutPassword(
+  id: number
+): Promise<UserWithoutPassword> {
+  const result = await client.query({
+    query: GetUserByIdWithoutPasswordGQL,
+    variables: { id },
+  });
+  const userWithoutPassword = result.data['users'][0] as
+    | UserWithoutPassword
+    | undefined;
+  if (userWithoutPassword) {
+    return userWithoutPassword;
+  } else {
+    throw new Error('username not found in database');
+  }
+}
+
 export async function UpdatePassword(
   // note that this function is agnostic
   // to the encryption and should recieve the
@@ -139,12 +156,19 @@ export async function AddToken(token: RefreshToken): Promise<RefreshToken> {
 }
 export async function CheckRefreshToken(
   tokenString: string
-): Promise<Token | undefined> {
+): Promise<RefreshToken> {
   const result = await client.query({
     query: CheckRefreshTokenGQL,
     variables: { token: tokenString },
   });
-  return result.data['refresh_tokens'][0] as Token | undefined;
+  const token = result.data['refresh_tokens'][0] as RefreshToken;
+  // if it exists return the promise for a then()
+  // otherwise trigger an Error for a catch()
+  if (token) {
+    return token;
+  } else {
+    throw new Error('token not found in database');
+  }
 }
 
 const CheckRefreshTokenGQL = gql`
@@ -178,6 +202,16 @@ const AddTokenGQL = gql`
   }
 `;
 
+const GetUserByIdWithoutPasswordGQL = gql`
+  query GetUSerByIdNoPassword($id: Int) {
+    users(where: { id: { _eq: $id } }) {
+      id
+      role
+      roles
+      username
+    }
+  }
+`;
 // const DeleteTokenGQL = gql`
 //   mutation DeleteToken($token: String) {
 //     delete_refresh_tokens(where: { token: { _eq: $token } }) {
