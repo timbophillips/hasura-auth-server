@@ -19,12 +19,12 @@ const hasuraGraphqlJWTSecret: { type: Algorithm; key: Secret } = JSON.parse(
 export async function generateTokens(
   user: User | UserWithoutPassword,
   ip: string
-): Promise<{ jwt: string; refreshToken: RefreshToken }> {
+): Promise<{ jwt: string; refresh_token: RefreshToken }> {
   const [jwt, refreshToken] = await Promise.all([
     generateJWT(user, ip),
     generateRefreshToken(user, ip),
   ]);
-  return { jwt: jwt, refreshToken: refreshToken };
+  return { jwt: jwt, refresh_token: refreshToken };
 }
 
 async function generateJWT(

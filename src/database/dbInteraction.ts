@@ -41,7 +41,7 @@ function RemovePasswordFromUser(user: User): UserWithoutPassword {
 
 export async function CheckRefreshToken(
   token: string
-): Promise<{ jwt: string; refreshToken: RefreshToken }> {
+): Promise<{ jwt: string; refresh_token: RefreshToken }> {
   const tokenFromDB = await GetRefreshToken(token);
   // if the token has expired then throw an error
   if (new Date(tokenFromDB.expires) < new Date(Date.now())) {
