@@ -29,7 +29,7 @@
     "nodemon": "^2.0.7",
     "prettier": "^2.2.1",
     "ts-node": "^9.1.1",
-    "typescript": "^4.3.0-dev.20210211"
+    "typescript": "^4.3.0-dev.20210218"
   },
   "dependencies": {
     "apollo-cache-inmemory": "^1.6.6",
