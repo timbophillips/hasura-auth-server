@@ -26,7 +26,7 @@ export function ChangePassword(request: Request, response: Response): void {
       });
     })
     .catch((error: Error) => {
-      console.error(error.message);
+      console.error(error.stack);
       response.status(401).json({ error: error.message });
     });
 }
