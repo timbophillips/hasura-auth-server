@@ -7,7 +7,7 @@ import {
   GetRefreshToken,
   GetUserByIdWithoutPassword,
 } from './graphql';
-import { hashSync, compareSync } from 'bcryptjs';
+import { hash, compareSync } from 'bcryptjs';
 import { generateTokens } from '../tools/jwt';
 
 export async function CheckCredentialsInDB(credentials: {
@@ -28,7 +28,7 @@ export async function UpdatePasswordInDB(
   userID: number,
   newPassword: string
 ): Promise<User> {
-  const encryptedNewPassword = hashSync(newPassword, 7);
+  const encryptedNewPassword = await hash(newPassword, 7);
   const updatedUserFromDB = await UpdatePassword(userID, encryptedNewPassword);
   return updatedUserFromDB;
 }
