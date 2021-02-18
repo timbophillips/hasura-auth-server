@@ -1,6 +1,6 @@
-import { splitUsernameAndPassword } from '../tools/decodeAuthHeader';
-import { generateTokens } from '../tools/jwt';
-import { CheckCredentialsInDB } from '../database/dbInteraction';
+import { splitUsernameAndPassword } from '../tools/decoer-auth-header';
+import { generateTokens } from '../tools/jwt-functions';
+import { CheckCredentialsInDB } from '../database/graphql-interaction';
 
 splitUsernameAndPassword(process.argv[2]).then((credentials) => {
   CheckCredentialsInDB(credentials).then((result) => {

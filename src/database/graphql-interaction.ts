@@ -8,7 +8,7 @@ import {
   GetUserByIdWithoutPassword,
 } from './graphql';
 import { hash, compareSync } from 'bcryptjs';
-import { generateTokens } from '../tools/jwt';
+import { generateTokens } from '../tools/jwt-functions';
 
 export async function CheckCredentialsInDB(credentials: {
   username: string;

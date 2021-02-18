@@ -1,9 +1,12 @@
 import { Request, Response } from 'express';
-import { generateTokens } from '../tools/jwt';
-import { CheckCredentialsInDB } from '../database/dbInteraction';
-import { DecodeAuthHeader } from '../tools/decodeAuthHeader';
+import { generateTokens } from '../tools/jwt-functions';
+import { CheckCredentialsInDB } from '../database/graphql-interaction';
+import { DecodeAuthHeader } from '../tools/decoer-auth-header';
 
-export function Login(request: Request, response: Response): void {
+export function CheckCredentialsAndIssueTokens(
+  request: Request,
+  response: Response
+): void {
   // decode the HTML header into username and (base65 decoded) password
   DecodeAuthHeader(request)
     .then((decodedCredentials) => CheckCredentialsInDB(decodedCredentials))
