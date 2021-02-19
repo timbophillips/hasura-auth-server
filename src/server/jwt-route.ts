@@ -1,6 +1,12 @@
 import { Request, Response } from 'express';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars, no-unused-vars
+import { JSONCookies } from 'cookie-parser';
+
 import { generateTokens } from '../tools/jwt-functions';
-import { CheckCredentialsInDB } from '../database/graphql-interaction';
+import {
+  CheckCredentialsInDB,
+  CheckRefreshToken,
+} from '../database/graphql-interaction';
 import { DecodeAuthHeader } from '../tools/decoer-auth-header';
 
 export function CheckCredentialsAndIssueTokens(
@@ -11,9 +17,42 @@ export function CheckCredentialsAndIssueTokens(
   DecodeAuthHeader(request)
     .then((decodedCredentials) => CheckCredentialsInDB(decodedCredentials))
     .then((result) => generateTokens(result, request.ip))
-    .then((tokens) => response.status(200).json(tokens))
+    .then((tokens) => {
+      response
+        .cookie('refresh-token', tokens.refresh_token, {
+          secure: true,
+          httpOnly: true,
+          maxAge: 1000 * 60 * 60 * 24 * 30, // would expire after 1month
+        })
+        .status(200)
+        .json(tokens.jwt);
+    })
     .catch((error: Error) => {
-      console.error(error.message);
+      console.error(error.stack);
+      response.status(401).json({ error: error.message });
+    });
+}
+
+export function CheckRefreshTokenAndIssueTokens(
+  request: Request,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars, no-unused-vars
+  response: Response
+): void {
+  Promise.resolve(request.cookies['refresh-token']['token'])
+    .then(CheckRefreshToken)
+    .then((tokens) => {
+      response
+        .cookie('refresh-token', tokens.refresh_token, {
+          secure: true,
+          httpOnly: true,
+          maxAge: 1000 * 60 * 60 * 24 * 30, // would expire after 1month
+        })
+        .status(200)
+        .json(tokens.jwt);
+      return tokens.refresh_token;
+    })
+    .catch((error: Error) => {
+      console.error(error.stack);
       response.status(401).json({ error: error.message });
     });
 }

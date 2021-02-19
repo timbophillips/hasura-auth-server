@@ -1,0 +1,23 @@
+{
+    "__meta__": {
+        "about": "HTTPie session file",
+        "help": "https://httpie.org/doc#sessions",
+        "httpie": "1.0.3"
+    },
+    "auth": {
+        "password": null,
+        "type": null,
+        "username": null
+    },
+    "cookies": {
+        "refresh-token": {
+            "expires": 1616309537,
+            "path": "/",
+            "secure": true,
+            "value": "j%3A%7B%22ip%22%3A%220.0.0.0%22%2C%22expires%22%3A%222021-02-26T06%3A52%3A16.233%2B00%3A00%22%2C%22token%22%3A%22e3df23135b50ef6d857b6fcc000c6c0175f7d04ee082d428334b2b4d5b9eba46c892242a40197a52%22%2C%22user%22%3A2%2C%22__typename%22%3A%22refresh_tokens%22%7D"
+        }
+    },
+    "headers": {
+        "Cookie": "refresh-token=j%3A%7B%22ip%22%3A%22%3A%3Affff%3A127.0.0.1%22%2C%22expires%22%3A%222021-02-26T06%3A52%3A00.537%2B00%3A00%22%2C%22token%22%3A%227c0a53cd93bbe3c7a7708a047ae6d7df1685c2aa246608da1857b19c9254d452ce6038e694c9d4f1%22%2C%22user%22%3A2%2C%22__typename%22%3A%22refresh_tokens%22%7D; Max-Age=2592000; Path=/; Expires=Sun, 21 Mar 2021 06"
+    }
+}

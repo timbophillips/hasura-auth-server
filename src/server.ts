@@ -4,15 +4,21 @@
 //  node -r dotenv/config server.js
 //  rather than node server.js
 const port = process.env.PORT || 3000;
+const cookieSecret = process.env.COOKIE_SECRET || 'cookiesecret';
 
 import { HasuraWebhook } from './server/hasura-webhook';
 import { ChangePassword } from './server/change-password';
-import { CheckCredentialsAndIssueTokens } from './server/jwt-route';
+import {
+  CheckCredentialsAndIssueTokens,
+  CheckRefreshTokenAndIssueTokens,
+} from './server/jwt-route';
 
 // how to make express work in TS
 import express, { json } from 'express';
+import cookieParser from 'cookie-parser';
+
 const app = express();
-app.use(json());
+app.use(json()).use(cookieParser(cookieSecret));
 
 // generic message
 app.get('/', (_req, res) => {
@@ -40,7 +46,7 @@ app.post('/changepassword', ChangePassword);
 app.get('/jwt', CheckCredentialsAndIssueTokens);
 
 // include refresh token in json refreshtoken=xxx
-app.post('/jwt/refresh', () => null);
+app.get('/jwt/refresh', CheckRefreshTokenAndIssueTokens);
 
 // include refresh token in json refreshtoken=xxx
 // and then all the user's tokens will be deleted

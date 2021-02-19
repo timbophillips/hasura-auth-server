@@ -6,6 +6,7 @@ import {
   RefreshToken,
   GetRefreshToken,
   GetUserByIdWithoutPassword,
+  DeleteToken,
 } from './graphql';
 import { hash, compareSync } from 'bcryptjs';
 import { generateTokens } from '../tools/jwt-functions';
@@ -16,7 +17,6 @@ export async function CheckCredentialsInDB(credentials: {
 }): Promise<UserWithoutPassword> {
   return GetUser(credentials.username).then((userFromDB) => {
     if (compareSync(credentials.nudePassword, userFromDB.password)) {
-      delete userFromDB.password;
       return RemovePasswordFromUser(userFromDB);
     } else {
       throw new Error('username found but password incorrect');
@@ -41,12 +41,16 @@ function RemovePasswordFromUser(user: User): UserWithoutPassword {
 
 export async function CheckRefreshToken(
   token: string
-): Promise<{ jwt: string; refresh_token: RefreshToken }> {
+): Promise<{
+  jwt: string;
+  refresh_token: RefreshToken;
+}> {
   const tokenFromDB = await GetRefreshToken(token);
   // if the token has expired then throw an error
   if (new Date(tokenFromDB.expires) < new Date(Date.now())) {
     throw new Error('token expired');
   }
   const user = await GetUserByIdWithoutPassword(tokenFromDB.user);
+  await DeleteToken(token);
   return generateTokens(user, '0.0.0.0');
 }

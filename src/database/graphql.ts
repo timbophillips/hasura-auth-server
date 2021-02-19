@@ -54,7 +54,7 @@ export async function GetAllUsers(): Promise<User[]> {
 export async function GetUser(username: string): Promise<User> {
   const result = await client.query({
     query: gql`
-      query User($username: String) {
+      query UserWithPassword($username: String) {
         users(where: { username: { _eq: $username } }) {
           id
           username
@@ -78,7 +78,7 @@ export async function GetUserWithoutPassword(
 ): Promise<UserWithoutPassword> {
   const result = await client.query({
     query: gql`
-      query User($username: String) {
+      query UserWithoutPassword($username: String) {
         users(where: { username: { _eq: $username } }) {
           id
           username
