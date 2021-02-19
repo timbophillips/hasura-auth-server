@@ -1,0 +1,20 @@
+{
+    "__meta__": {
+        "about": "HTTPie session file",
+        "help": "https://httpie.org/doc#sessions",
+        "httpie": "1.0.3"
+    },
+    "auth": {
+        "raw_auth": "Mum:password",
+        "type": "basic"
+    },
+    "cookies": {
+        "refresh-token": {
+            "expires": 1616338418,
+            "path": "/",
+            "secure": true,
+            "value": "j%3A%7B%22ip%22%3A%22%3A%3Affff%3A127.0.0.1%22%2C%22expires%22%3A%222021-02-26T14%3A53%3A36.954%2B00%3A00%22%2C%22token%22%3A%22382e5fa9640679a3f16cd7b6edb0805edda77f82944a5ae89c60be1f895c4283b48f94e5f5c74108%22%2C%22user%22%3A2%2C%22__typename%22%3A%22refresh_tokens%22%7D"
+        }
+    },
+    "headers": {}
+}
