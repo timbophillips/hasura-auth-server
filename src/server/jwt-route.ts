@@ -1,11 +1,13 @@
 import { CookieOptions, Request, Response } from 'express';
 import { GenerateTokens } from '../tools/GenerateTokens';
-import {
-  CheckCredentialsInDB,
-  CheckRefreshToken,
-} from '../database/graphql-interaction';
+import { CheckRefreshToken } from '../tools/CheckRefreshToken';
+import { CheckCredentialsInDB } from '../tools/CheckCredentialsInDB';
 import { DecodeAuthHeader } from '../tools/DecodeAuthorHeader';
-import { RefreshToken } from '../database/graphql';
+import {
+  DeleteAllTokensOfUser,
+  GetUser,
+  RefreshToken,
+} from '../database/GraphQL';
 
 const cookieOptions: CookieOptions = {
   httpOnly: true,
@@ -39,6 +41,21 @@ export function CheckRefreshTokenAndIssueTokens(
     .catch((error: Error) => {
       console.error(error.stack);
       response.status(401).json({ error: error.message });
+    });
+}
+
+export function DeleteAllRefreshTokensForUser(
+  request: Request,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars, no-unused-vars
+  response: Response
+): void {
+  Promise.resolve(request.params['username'])
+    .then(GetUser)
+    .then((user) => DeleteAllTokensOfUser(user.id))
+    .then((tokens) => response.status(200).json({ 'deleted-tokens': tokens }))
+    .catch((error: Error) => {
+      console.error(error.stack);
+      response.status(401).json({ error: error.stack });
     });
 }
 

@@ -1,4 +1,4 @@
-import { User, RefreshToken, UserWithoutPassword } from '../database/graphql';
+import { User, RefreshToken, UserWithoutPassword } from '../database/GraphQL';
 import { generateJWT, generateRefreshToken } from './TokenGenerators';
 
 export async function GenerateTokens(

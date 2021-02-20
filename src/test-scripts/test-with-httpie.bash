@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/bash -x
 
 SERVER=localhost:3000
 USERNAME=Mum
@@ -25,3 +25,6 @@ TOKEN=$(http --session=/var/tmp/session.json -b GET $SERVER/jwt/refresh)
 
 # now use that variable to make a GraphQL query
 http -v POST https://smacking.hasura.app/v1/graphql Authorization:'Bearer '$(echo $TOKEN)  query="$GRAPHQL"
+
+# Now delete all of that user's tokens
+http -v $SERVER/logout/$USERNAME

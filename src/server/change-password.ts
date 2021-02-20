@@ -1,8 +1,8 @@
 import { DecodeAuthHeader } from '../tools/DecodeAuthorHeader';
 import {
-  CheckCredentialsInDB,
   UpdatePasswordInDB,
-} from '../database/graphql-interaction';
+} from '../tools/UpdatePasswordInDB';
+import { CheckCredentialsInDB } from "../tools/CheckCredentialsInDB";
 
 import { Request, Response } from 'express';
 

@@ -5,7 +5,7 @@ import {
   RefreshToken,
   AddToken,
   UserWithoutPassword,
-} from '../database/graphql';
+} from '../database/GraphQL';
 
 const jwtTokenExpiresMins = process.env.JWT_TOKEN_EXPIRES_MINS;
 const refreshTokenExpiresDays = parseInt(

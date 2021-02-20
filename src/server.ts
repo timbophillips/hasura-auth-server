@@ -11,6 +11,7 @@ import { ChangePassword } from './server/change-password';
 import {
   CheckCredentialsAndIssueTokens,
   CheckRefreshTokenAndIssueTokens,
+  DeleteAllRefreshTokensForUser,
 } from './server/jwt-route';
 
 // how to make express work in TS
@@ -60,7 +61,7 @@ app.get('/jwt/refresh', CheckRefreshTokenAndIssueTokens);
 // include refresh token in json refreshtoken=xxx
 // and then all the user's tokens will be deleted
 // (for logging out)
-app.delete('/jwt/refresh', () => null);
+app.get('/logout/:username', DeleteAllRefreshTokensForUser);
 
 // standard Express fluff
 app.listen(port, () => {

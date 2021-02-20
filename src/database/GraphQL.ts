@@ -68,6 +68,7 @@ export async function GetUser(username: string): Promise<User> {
   });
   const user = result.data['users'][0] as User | undefined;
   if (user) {
+    console.log(`username ${username} matched to userID=${user.id} in DB`);
     return user;
   } else {
     throw new Error('username not found in database');
@@ -243,5 +244,7 @@ export async function DeleteAllTokensOfUser(
     `,
     variables: { user: userId },
   });
-  return result.data.delete_refresh_tokens.returning;
+  const deletedTokens = result.data.delete_refresh_tokens.returning;
+  console.log(`deleting tokens: ${JSON.stringify(deletedTokens)}`);
+  return deletedTokens;
 }
