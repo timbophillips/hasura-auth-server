@@ -9,7 +9,7 @@
     "watch-ts": "tsc -w",
     "lint": "eslint 'src/**/*.{js,ts}' --quiet --fix",
     "postinstall": "tsc",
-    "start": "node -r dotenv/config dist/server.js"
+    "start": "tsc && node -r dotenv/config dist/server.js"
   },
   "author": "",
   "license": "ISC",
