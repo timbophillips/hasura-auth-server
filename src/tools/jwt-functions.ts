@@ -46,8 +46,8 @@ async function generateJWT(
         'x-hasura-user-id': user.id.toString(),
       },
       createdByIp: ip,
-      sub: user.id,
-      id: user.id,
+      sub: user.id.toString(),
+      id: user.id.toString(),
     },
     hasuraGraphqlJWTSecret.key,
     {
