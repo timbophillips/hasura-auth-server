@@ -16,18 +16,7 @@ const hasuraGraphqlJWTSecret: { type: Algorithm; key: Secret } = JSON.parse(
   process.env.HASURA_GRAPHQL_JWT_SECRET
 );
 
-export async function generateTokens(
-  user: User | UserWithoutPassword,
-  ip: string
-): Promise<{ jwt: string; refresh_token: RefreshToken }> {
-  const [jwt, refreshToken] = await Promise.all([
-    generateJWT(user, ip),
-    generateRefreshToken(user, ip),
-  ]);
-  return { jwt: jwt, refresh_token: refreshToken };
-}
-
-async function generateJWT(
+export async function generateJWT(
   user: User | UserWithoutPassword,
   ip: string
 ): Promise<string> {
@@ -57,7 +46,7 @@ async function generateJWT(
   );
 }
 
-async function generateRefreshToken(
+export async function generateRefreshToken(
   user: User | UserWithoutPassword,
   ip: string
 ): Promise<RefreshToken> {

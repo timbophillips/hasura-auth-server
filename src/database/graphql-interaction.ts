@@ -3,13 +3,10 @@ import {
   UserWithoutPassword,
   GetUser,
   UpdatePassword,
-  RefreshToken,
   GetRefreshToken,
   GetUserByIdWithoutPassword,
-  DeleteToken,
 } from './graphql';
 import { hash, compareSync } from 'bcryptjs';
-import { generateTokens } from '../tools/jwt-functions';
 
 export async function CheckCredentialsInDB(credentials: {
   username: string;
@@ -17,6 +14,9 @@ export async function CheckCredentialsInDB(credentials: {
 }): Promise<UserWithoutPassword> {
   return GetUser(credentials.username).then((userFromDB) => {
     if (compareSync(credentials.nudePassword, userFromDB.password)) {
+      console.log(
+        `supplied password for ${credentials.username} matches encrypted password in database`
+      );
       return RemovePasswordFromUser(userFromDB);
     } else {
       throw new Error('username found but password incorrect');
@@ -41,16 +41,17 @@ function RemovePasswordFromUser(user: User): UserWithoutPassword {
 
 export async function CheckRefreshToken(
   token: string
-): Promise<{
-  jwt: string;
-  refresh_token: RefreshToken;
-}> {
+): Promise<UserWithoutPassword> {
   const tokenFromDB = await GetRefreshToken(token);
+  console.log(
+    `${token} matches token from DB with user_id=${tokenFromDB.user}`
+  );
   // if the token has expired then throw an error
   if (new Date(tokenFromDB.expires) < new Date(Date.now())) {
     throw new Error('token expired');
+  } else {
+    console.log(`token is still valid on time criteria`);
   }
   const user = await GetUserByIdWithoutPassword(tokenFromDB.user);
-  await DeleteToken(token);
-  return generateTokens(user, '0.0.0.0');
+  return user;
 }

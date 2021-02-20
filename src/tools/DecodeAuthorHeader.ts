@@ -22,6 +22,7 @@ Promise<{ username: string; nudePassword: string }> {
     .toString()
     .split(':');
   // roll up the two strings as a neat little object
+  console.log(`username ${username} in authorization header`);
   return { username: username, nudePassword: nudePassword };
 }
 

@@ -1,9 +1,9 @@
-import { splitUsernameAndPassword } from '../tools/decoer-auth-header';
-import { generateTokens } from '../tools/jwt-functions';
+import { splitUsernameAndPassword } from '../tools/DecodeAuthorHeader';
+import { GenerateTokens } from "../tools/GenerateTokens";
 import { CheckCredentialsInDB } from '../database/graphql-interaction';
 
 splitUsernameAndPassword(process.argv[2]).then((credentials) => {
   CheckCredentialsInDB(credentials).then((result) => {
-    generateTokens(result, '0.0.0.0').then(console.log);
+    GenerateTokens(result, '0.0.0.0').then(console.log);
   });
 });
