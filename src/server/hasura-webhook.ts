@@ -1,5 +1,5 @@
 import { DecodeAuthHeader } from '../tools/DecodeAuthorHeader';
-import { CheckCredentialsInDB } from "../tools/CheckCredentialsInDB";
+import { CheckCredentialsInDB } from '../tools/CheckCredentialsInDB';
 import { Request, Response } from 'express';
 
 export function HasuraWebhook(request: Request, response: Response): void {

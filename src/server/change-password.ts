@@ -1,8 +1,6 @@
 import { DecodeAuthHeader } from '../tools/DecodeAuthorHeader';
-import {
-  UpdatePasswordInDB,
-} from '../tools/UpdatePasswordInDB';
-import { CheckCredentialsInDB } from "../tools/CheckCredentialsInDB";
+import { UpdatePasswordInDB } from '../tools/UpdatePasswordInDB';
+import { CheckCredentialsInDB } from '../tools/CheckCredentialsInDB';
 
 import { Request, Response } from 'express';
 
