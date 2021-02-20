@@ -16,9 +16,18 @@ import {
 // how to make express work in TS
 import express, { json } from 'express';
 import cookieParser from 'cookie-parser';
+import cors from 'cors';
 
 const app = express();
-app.use(json()).use(cookieParser(cookieSecret));
+app.use(json());
+app.use(cookieParser(cookieSecret));
+app.use(
+  cors({
+    origin: true,
+    exposedHeaders: ['set-cookie', 'Set-Cookie'],
+    credentials: true,
+  })
+);
 
 // generic message
 app.get('/', (_req, res) => {

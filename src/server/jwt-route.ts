@@ -20,12 +20,11 @@ export function CheckCredentialsAndIssueTokens(
     .then((tokens) => {
       response
         .cookie('refresh-token', tokens.refresh_token, {
-          secure: true,
           httpOnly: true,
           maxAge: 1000 * 60 * 60 * 24 * 30, // would expire after 1month
         })
         .status(200)
-        .json(tokens.jwt);
+        .send(tokens.jwt);
     })
     .catch((error: Error) => {
       console.error(error.stack);
@@ -43,12 +42,11 @@ export function CheckRefreshTokenAndIssueTokens(
     .then((tokens) => {
       response
         .cookie('refresh-token', tokens.refresh_token, {
-          secure: true,
           httpOnly: true,
           maxAge: 1000 * 60 * 60 * 24 * 30, // would expire after 1month
         })
         .status(200)
-        .json(tokens.jwt);
+        .send(tokens.jwt);
       return tokens.refresh_token;
     })
     .catch((error: Error) => {
