@@ -16,6 +16,8 @@ example:
     "username": "Dad"
 },
 ```
+There are also sample hasura PSQL dump and metadata JSON files you can use to create a users database quickly
+
 ## To use
 ```
 git clone https://github.com/timbophillips/hasura-auth-server.git
