@@ -83,8 +83,46 @@ eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwczovL2hhc3VyYS5pby9qd3QvY2xhaW1zIjp
 ### /logout/:username
 Expects a GET request (body of request is ignored). Deletes all the refresh tokens for the provided username.
 
+Test with HTTPie:
+```
+http -v localhost:3000/logout/Mum
+```
+Output:
+```
+GET /logout/Mum HTTP/1.1
+Accept: */*
+Accept-Encoding: gzip, deflate
+Connection: keep-alive
+Host: localhost:3000
+User-Agent: HTTPie/1.0.3
+
+HTTP/1.1 200 OK
+Connection: keep-alive
+Content-Length: 143
+Content-Type: application/json; charset=utf-8
+Date: Sun, 21 Feb 2021 05:11:12 GMT
+ETag: W/"8f-nfIe8VszZCkWdOIlHTcHseNxjO4"
+Keep-Alive: timeout=5
+X-Powered-By: Express
+
+{
+    "deleted-tokens": [
+        {
+            "__typename": "refresh_tokens",
+            "token": "0bd96e258d1da233099064e61626b7053342e639ff7d0b8827b8351f89b1d6f7fec16d474b3c4be3"
+        }
+    ]
+}
+```
+
+You can then use HTTPie again to test the JWT token with the Hasura database server
+```
+TOKEN=$(http --session=/var/tmp/session.json -b GET localhost:3000/refresh)
+http -v POST $HASURA_SERVER_GRAPHQL_ENDPOINT Authorization:'Bearer '$(echo $TOKEN)  query="$GRAPHQL"
+```
+
 ### /webhook
-Written to work with the Hasura webhook authorization option (for your Hasura database not the authorization database). Expects a GET request including standard HTTP Authorization headers (https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Authorization) which will have been forwarded by Hasura after a client request. 
+Written to work with the Hasura webhook authorization option (for your Hasura database not the authorization database). Expects a GET request including standard HTTP Authorization headers (https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Authorization) which will have been forwarded by Hasura after a client request. Read more at https://hasura.io/docs/1.0/graphql/core/auth/authentication/webhook.html
 
 test with HTTPie:
 ```

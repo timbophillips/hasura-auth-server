@@ -27,7 +27,7 @@ http --session=/var/tmp/session.json -v GET $SERVER/refresh
 TOKEN=$(http --session=/var/tmp/session.json -b GET $SERVER/refresh)
 
 # now use that variable to make a GraphQL query
-http -v POST https://smacking.hasura.app/v1/graphql Authorization:'Bearer '$(echo $TOKEN)  query="$GRAPHQL"
+http -v POST $SERVER Authorization:'Bearer '$(echo $TOKEN)  query="$GRAPHQL"
 
 # Now delete all of that user's tokens
 http -v $SERVER/logout/$USERNAME
