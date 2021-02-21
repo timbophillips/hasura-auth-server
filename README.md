@@ -1,7 +1,8 @@
 # Authorization server 
-# (aimed at Hasura but can be used for any JWT/refresh-token set up)
-# written in Typescript | NodeJS | Apollo and uses a Hasura backend for the users database
+(aimed at Hasura but can be used for any JWT/refresh-token set up)
+written in Typescript | NodeJS | Apollo and uses a Hasura backend for the users database
 
+## Backend users database
 This authorization server relies on a Hasura database with a users table with the fields id, username, password (hashed), role, and (optionally) roles.
 
 example:
@@ -32,12 +33,11 @@ npm start
 
 ## API
 
-### /login
-Expects a GET request including standard HTTP Authorization headers (https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Authorization)
-
-Checks these credentials with the attached Hasura database..
-
-Responds with a signed JWT in body and a refresh token as an HTTP-only cookie.
+### GET /login
+* Expects a GET request including standard HTTP Authorization headers 
+* Read more about that at https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Authorization
+* Checks these credentials with the attached Hasura database..
+* Responds with a signed JWT in body and a refresh token as an HTTP-only cookie.
 
 Test with HTTPie:
 ```
@@ -65,8 +65,8 @@ X-Powered-By: Express
 
 eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwczovL2hhc3VyYS5pby9qd3QvY2xhaW1zIjp7IngtaGFzdXJhLWFsbG93ZWQtcm9sZXMiOlsic3VwZXItdXNlciJdLCJ4LWhhc3VyYS1kZWZhdWx0LXJvbGUiOiJzdXBlci11c2VyIiwieC1oYXN1cmEtcm9sZSI6InN1cGVyLXVzZXIiLCJ4LWhhc3VyYS11c2VyLWlkIjoiMiJ9LCJjcmVhdGVkQnlJcCI6Ijo6ZmZmZjoxMjcuMC4wLjEiLCJzdWIiOiIyIiwiaWQiOiIyIiwiaWF0IjoxNjEzODg0MDAzLCJleHAiOjE2MTM4ODQ5MDN9.Sb980Wk03wVJt7mrKt6eMEHkeqPonEpOPLJUcR-_2cA
 ```
-### /refresh
-Expects a GET request with the same refresh token, and responds with a new JWT and new refresh token (in same format as above). Body of request is ignored.
+### GET /refresh
+* Expects a GET request with the same refresh token, and responds with a new JWT and new refresh token (in same format as above)* Body of request is ignored.
 
 Test with HTTPie (after doing above test which will save the refresh token cookie in a json file):
 ```
@@ -95,8 +95,9 @@ X-Powered-By: Express
 
 eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwczovL2hhc3VyYS5pby9qd3QvY2xhaW1zIjp7IngtaGFzdXJhLWFsbG93ZWQtcm9sZXMiOlsic3VwZXItdXNlciJdLCJ4LWhhc3VyYS1kZWZhdWx0LXJvbGUiOiJzdXBlci11c2VyIiwieC1oYXN1cmEtcm9sZSI6InN1cGVyLXVzZXIiLCJ4LWhhc3VyYS11c2VyLWlkIjoiMiJ9LCJjcmVhdGVkQnlJcCI6Ijo6ZmZmZjoxMjcuMC4wLjEiLCJzdWIiOiIyIiwiaWQiOiIyIiwiaWF0IjoxNjEzODg0MjYwLCJleHAiOjE2MTM4ODUxNjB9.60sEHTKgNLbzVDur-BbREEDTA_h0kC0OF1E7rkumdgA
 ```
-### /logout/:username
-Expects a GET request (body of request is ignored). Deletes all the refresh tokens for the provided username.
+### GET /logout/:username
+* Expects a GET request (body of request is ignored). 
+* Deletes all the refresh tokens for the provided username.
 
 Test with HTTPie:
 ```
@@ -136,8 +137,53 @@ TOKEN=$(http --session=/var/tmp/session.json -b GET localhost:3000/refresh)
 http -v POST $HASURA_SERVER_GRAPHQL_ENDPOINT Authorization:'Bearer '$(echo $TOKEN)  query="$GRAPHQL"
 ```
 
+### POST /changepassword
+
+* Expects a POST request including 
+    * Standard HTTP Authorization headers (https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Authorization)
+    * JSON body with `{ 'newpassword' : 'MyNewPassword' }`
+
+Test with HTTPie
+```
+http -v --auth Mum:password POST localhost:3000/changepassword newpassword=MyNewPassword
+```
+Output
+```
+POST /changepassword HTTP/1.1
+Accept: application/json, */*
+Accept-Encoding: gzip, deflate
+Authorization: Basic RGFkOnRlbXAtcGFzc3dvcmQ=
+Connection: keep-alive
+Content-Length: 27
+Content-Type: application/json
+Host: smacking-hasura-auth.herokuapp.com
+User-Agent: HTTPie/1.0.3
+
+{
+    "newpassword": "password"
+}
+
+HTTP/1.1 200 OK
+Connection: keep-alive
+Content-Length: 51
+Content-Type: application/json; charset=utf-8
+Date: Sun, 21 Feb 2021 13:23:52 GMT
+Etag: W/"33-Xs3ZLNEcHehD3MxkJ19UxQSDdns"
+Server: Cowboy
+Via: 1.1 vegur
+X-Powered-By: Express
+
+{
+    "message": "password for Dad successfully changed"
+}
+```
+
 ### /webhook
-Written to work with the Hasura webhook authorization option (for your Hasura database not the authorization database). Expects a GET request including standard HTTP Authorization headers (https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Authorization) which will have been forwarded by Hasura after a client request. Read more at https://hasura.io/docs/1.0/graphql/core/auth/authentication/webhook.html
+* Written to work with the Hasura webhook authorization option (for your Hasura database not the authorization database).
+* Expects a GET request including standard HTTP Authorization headers 
+* REad more about that at https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Authorization
+* These headers will have been forwarded by Hasura after a client request. 
+* Read more at https://hasura.io/docs/1.0/graphql/core/auth/authentication/webhook.html
 
 test with HTTPie:
 ```

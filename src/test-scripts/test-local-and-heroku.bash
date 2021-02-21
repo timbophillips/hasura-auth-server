@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/bash -x
 bash $(dirname "$0")/test-script.bash \
     localhost:3000 \
     Dad \
