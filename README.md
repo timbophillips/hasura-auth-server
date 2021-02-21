@@ -28,7 +28,7 @@ npm install
 create a .env file (using example.env as a template) to point to your hasura server, then ...
 ```
 npm start
-
+```
 
 ## API
 
