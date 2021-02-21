@@ -79,7 +79,7 @@ Set-Cookie: refresh-token=j%3A%7B%22ip%22%3A%22%3A%3Affff%3A127.0.0.1%22%2C%22ex
 X-Powered-By: Express
 
 eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwczovL2hhc3VyYS5pby9qd3QvY2xhaW1zIjp7IngtaGFzdXJhLWFsbG93ZWQtcm9sZXMiOlsic3VwZXItdXNlciJdLCJ4LWhhc3VyYS1kZWZhdWx0LXJvbGUiOiJzdXBlci11c2VyIiwieC1oYXN1cmEtcm9sZSI6InN1cGVyLXVzZXIiLCJ4LWhhc3VyYS11c2VyLWlkIjoiMiJ9LCJjcmVhdGVkQnlJcCI6Ijo6ZmZmZjoxMjcuMC4wLjEiLCJzdWIiOiIyIiwiaWQiOiIyIiwiaWF0IjoxNjEzODg0MjYwLCJleHAiOjE2MTM4ODUxNjB9.60sEHTKgNLbzVDur-BbREEDTA_h0kC0OF1E7rkumdgA
-
+```
 ### /logout/:username
 Expects a GET request (body of request is ignored). Deletes all the refresh tokens for the provided username.
 
