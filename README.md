@@ -1,6 +1,6 @@
-# Authorization server 
-(aimed at Hasura but can be used for any JWT/refresh-token set up)
-written in Typescript | NodeJS | Apollo and uses a Hasura backend for the users database
+# Authorization server (Typescript | NodeJS | Apollo | Hasura)
+* Aimed at Hasura but can be used for any JWT/refresh-token set up
+* Written in Typescript for NodeJS using Apollo to talk to a Hasura backend for the users database
 
 ## Backend users database
 This authorization server relies on a Hasura database with a users table with the fields id, username, password (hashed), role, and (optionally) roles.
@@ -38,6 +38,8 @@ npm start
 * Read more about that at https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Authorization
 * Checks these credentials with the attached Hasura database..
 * Responds with a signed JWT in body and a refresh token as an HTTP-only cookie.
+* This is designed to work with Hasura Cloud when using JWT authentication
+* Read more at https://hasura.io/docs/1.0/graphql/core/auth/authentication/jwt.html
 
 Test with HTTPie:
 ```
@@ -66,7 +68,9 @@ X-Powered-By: Express
 eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwczovL2hhc3VyYS5pby9qd3QvY2xhaW1zIjp7IngtaGFzdXJhLWFsbG93ZWQtcm9sZXMiOlsic3VwZXItdXNlciJdLCJ4LWhhc3VyYS1kZWZhdWx0LXJvbGUiOiJzdXBlci11c2VyIiwieC1oYXN1cmEtcm9sZSI6InN1cGVyLXVzZXIiLCJ4LWhhc3VyYS11c2VyLWlkIjoiMiJ9LCJjcmVhdGVkQnlJcCI6Ijo6ZmZmZjoxMjcuMC4wLjEiLCJzdWIiOiIyIiwiaWQiOiIyIiwiaWF0IjoxNjEzODg0MDAzLCJleHAiOjE2MTM4ODQ5MDN9.Sb980Wk03wVJt7mrKt6eMEHkeqPonEpOPLJUcR-_2cA
 ```
 ### GET /refresh
-* Expects a GET request with the same refresh token, and responds with a new JWT and new refresh token (in same format as above)* Body of request is ignored.
+* Expects a GET request with the same refresh token
+* Body of request is ignored.
+* Responds with a new JWT and new refresh token (in same format as with GET /login)
 
 Test with HTTPie (after doing above test which will save the refresh token cookie in a json file):
 ```
