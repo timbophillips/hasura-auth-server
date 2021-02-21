@@ -53,10 +53,10 @@ app.post('/changepassword', ChangePassword);
 
 // include username:password in auth header
 // a JWT and a refresh token will be returned in the response
-app.get('/jwt', CheckCredentialsAndIssueTokens);
+app.get('/login', CheckCredentialsAndIssueTokens);
 
 // include refresh token in json refreshtoken=xxx
-app.get('/jwt/refresh', CheckRefreshTokenAndIssueTokens);
+app.get('/refresh', CheckRefreshTokenAndIssueTokens);
 
 // include refresh token in json refreshtoken=xxx
 // and then all the user's tokens will be deleted
