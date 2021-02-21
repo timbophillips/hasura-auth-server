@@ -1,0 +1,146 @@
+{
+  "version": 2,
+  "tables": [
+    {
+      "table": {
+        "schema": "public",
+        "name": "online_users"
+      },
+      "object_relationships": [
+        {
+          "name": "user",
+          "using": {
+            "manual_configuration": {
+              "remote_table": {
+                "schema": "public",
+                "name": "users"
+              },
+              "column_mapping": {
+                "id": "id"
+              }
+            }
+          }
+        }
+      ],
+      "select_permissions": [
+        {
+          "role": "user",
+          "permission": {
+            "columns": [
+              "id",
+              "last_seen"
+            ],
+            "filter": {}
+          }
+        }
+      ]
+    },
+    {
+      "table": {
+        "schema": "public",
+        "name": "refresh_tokens"
+      },
+      "object_relationships": [
+        {
+          "name": "userByUser",
+          "using": {
+            "foreign_key_constraint_on": "user"
+          }
+        }
+      ]
+    },
+    {
+      "table": {
+        "schema": "public",
+        "name": "users"
+      },
+      "array_relationships": [
+        {
+          "name": "refresh_tokens",
+          "using": {
+            "foreign_key_constraint_on": {
+              "column": "user",
+              "table": {
+                "schema": "public",
+                "name": "refresh_tokens"
+              }
+            }
+          }
+        }
+      ],
+      "select_permissions": [
+        {
+          "role": "super-user",
+          "permission": {
+            "columns": [
+              "created_at",
+              "id",
+              "last_seen",
+              "role",
+              "roles",
+              "username"
+            ],
+            "filter": {}
+          }
+        },
+        {
+          "role": "user",
+          "permission": {
+            "columns": [
+              "created_at",
+              "id",
+              "last_seen",
+              "password",
+              "role",
+              "roles",
+              "username"
+            ],
+            "filter": {
+              "id": {
+                "_eq": "X-Hasura-User-Id"
+              }
+            }
+          }
+        }
+      ],
+      "update_permissions": [
+        {
+          "role": "super-user",
+          "permission": {
+            "columns": [
+              "password"
+            ],
+            "filter": {
+              "id": {
+                "_eq": "X-Hasura-User-Id"
+              }
+            },
+            "check": {
+              "id": {
+                "_eq": "X-Hasura-User-Id"
+              }
+            }
+          }
+        },
+        {
+          "role": "user",
+          "permission": {
+            "columns": [
+              "password"
+            ],
+            "filter": {
+              "id": {
+                "_eq": "X-Hasura-User-Id"
+              }
+            },
+            "check": {
+              "id": {
+                "_eq": "X-Hasura-User-Id"
+              }
+            }
+          }
+        }
+      ]
+    }
+  ]
+}
