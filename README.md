@@ -146,7 +146,8 @@ X-Powered-By: Express
 ### POST /changepassword
 
 * Expects a POST request including 
-    * Standard HTTP Authorization headers (https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Authorization)
+    * Standard HTTP Authorization headers 
+    * Read more about that at (https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Authorization)
     * JSON body with `{ 'newpassword' : 'MyNewPassword' }`
 
 Test with HTTPie
@@ -187,7 +188,7 @@ X-Powered-By: Express
 ### /webhook
 * Written to work with the Hasura webhook authorization option (for your Hasura database not the authorization database).
 * Expects a GET request including standard HTTP Authorization headers 
-* REad more about that at https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Authorization
+* Read more about that at https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Authorization
 * These headers will have been forwarded by Hasura after a client request. 
 * Read more at https://hasura.io/docs/1.0/graphql/core/auth/authentication/webhook.html
 
