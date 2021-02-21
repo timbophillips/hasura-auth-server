@@ -1,4 +1,5 @@
-# Authorization server written in Typescript | NodeJS | Apollo
+# Authorization server (aimed at Hasura but can be used for any JWT/refresh-token set up)
+# written in Typescript | NodeJS | Apollo
 
 This authorization server relies on a Hasura database with a users table with the fields id, username, password (hashed), role, and (optionally) roles.
 
@@ -15,6 +16,17 @@ example:
     "username": "Dad"
 },
 ```
+## To use
+```
+git clone https://github.com/timbophillips/hasura-auth-server.git
+cd hasura-auth-server/
+npm install
+```
+create a .env file (using example.env as a template) to point to your hasura server, then ...
+```
+npm start
+
+
 ## API
 
 ### /login
