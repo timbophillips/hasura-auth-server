@@ -1,5 +1,8 @@
 #!/bin/bash -x
 
+# delete the (previously used) session file if it exists
+rm -f /var/tmp/session.json
+
 SERVER=localhost:3000
 USERNAME=Mum
 PASSWORD=password
@@ -18,7 +21,7 @@ http --auth $USERNAME:$PASSWORD -v GET $SERVER/webhook
 http --session=/var/tmp/session.json --auth $USERNAME:$PASSWORD -v GET $SERVER/login
 
 # check that the refresh token system is working with verbose output
-http --session=/var/tmp/session.json -b GET $SERVER/refresh
+http --session=/var/tmp/session.json -v GET $SERVER/refresh
 
 # do it again but this time save it to a variable
 TOKEN=$(http --session=/var/tmp/session.json -b GET $SERVER/refresh)

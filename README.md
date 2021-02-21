@@ -1,4 +1,4 @@
-### Authorization server written in Typescript | NodeJS | Apollo
+# Authorization server written in Typescript | NodeJS | Apollo
 
 This authorization server relies on a Hasura database with a users table with the fields id, username, password (hashed), role, and (optionally) roles.
 
@@ -17,7 +17,7 @@ example:
 ```
 ## API
 
-# /login
+### /login
 Expects a GET request including standard HTTP Authorization headers (https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Authorization)
 
 Checks these credentials with the attached Hasura database..
@@ -28,27 +28,90 @@ Test with HTTPie:
 ```
 http --session=/var/tmp/session.json --auth Mum:password -v GET localhost:3000/login
 ```
-# /refresh
+Output:
+```
+GET /login HTTP/1.1
+Accept: */*
+Accept-Encoding: gzip, deflate
+Authorization: Basic TXVtOnBhc3N3b3Jk
+Connection: keep-alive
+Host: localhost:3000
+User-Agent: HTTPie/1.0.3
+
+HTTP/1.1 200 OK
+Connection: keep-alive
+Content-Length: 413
+Content-Type: text/html; charset=utf-8
+Date: Sun, 21 Feb 2021 05:06:44 GMT
+ETag: W/"19d-6WcJPDvXSfFE+1GEq7VQz/osVAc"
+Keep-Alive: timeout=5
+Set-Cookie: refresh-token=j%3A%7B%22ip%22%3A%22%3A%3Affff%3A127.0.0.1%22%2C%22expires%22%3A%222021-02-28T05%3A06%3A43.202%2B00%3A00%22%2C%22token%22%3A%22f7a03c6f2c40b21139a9c88bd5782167359ee4df399a678c9c3da798f277ee928fb9ad149e9c7bf6%22%2C%22user%22%3A2%2C%22__typename%22%3A%22refresh_tokens%22%7D; Max-Age=2592000; Path=/; Expires=Tue, 23 Mar 2021 05:06:44 GMT; HttpOnly
+X-Powered-By: Express
+
+eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwczovL2hhc3VyYS5pby9qd3QvY2xhaW1zIjp7IngtaGFzdXJhLWFsbG93ZWQtcm9sZXMiOlsic3VwZXItdXNlciJdLCJ4LWhhc3VyYS1kZWZhdWx0LXJvbGUiOiJzdXBlci11c2VyIiwieC1oYXN1cmEtcm9sZSI6InN1cGVyLXVzZXIiLCJ4LWhhc3VyYS11c2VyLWlkIjoiMiJ9LCJjcmVhdGVkQnlJcCI6Ijo6ZmZmZjoxMjcuMC4wLjEiLCJzdWIiOiIyIiwiaWQiOiIyIiwiaWF0IjoxNjEzODg0MDAzLCJleHAiOjE2MTM4ODQ5MDN9.Sb980Wk03wVJt7mrKt6eMEHkeqPonEpOPLJUcR-_2cA
+```
+### /refresh
 Expects a GET request with the same refresh token, and responds with a new JWT and new refresh token (in same format as above). Body of request is ignored.
 
 Test with HTTPie (after doing above test which will save the refresh token cookie in a json file):
 ```
 http --session=/var/tmp/session.json -b GET localhost:3000/refresh
 ```
-# /logout/:username
+Output:
+```
+GET /refresh HTTP/1.1
+Accept: */*
+Accept-Encoding: gzip, deflate
+Authorization: Basic TXVtOnBhc3N3b3Jk
+Connection: keep-alive
+Cookie: refresh-token=j%3A%7B%22ip%22%3A%22%3A%3Affff%3A127.0.0.1%22%2C%22expires%22%3A%222021-02-28T05%3A10%3A55.023%2B00%3A00%22%2C%22token%22%3A%22060354ff70ad2709074157c0a4ff929086872649e5f853bc1921b3eac583fb65054e7b111af920de%22%2C%22user%22%3A2%2C%22__typename%22%3A%22refresh_tokens%22%7D
+Host: localhost:3000
+User-Agent: HTTPie/1.0.3
+
+HTTP/1.1 200 OK
+Connection: keep-alive
+Content-Length: 413
+Content-Type: text/html; charset=utf-8
+Date: Sun, 21 Feb 2021 05:11:02 GMT
+ETag: W/"19d-VUhguGdkSlLF4FpkyIU5dYr9HHw"
+Keep-Alive: timeout=5
+Set-Cookie: refresh-token=j%3A%7B%22ip%22%3A%22%3A%3Affff%3A127.0.0.1%22%2C%22expires%22%3A%222021-02-28T05%3A11%3A00.993%2B00%3A00%22%2C%22token%22%3A%2212a31559ccb0218a74f550f43961ce01bf4af871699e818c3e64b080d0697cb706dcad79d253a992%22%2C%22user%22%3A2%2C%22__typename%22%3A%22refresh_tokens%22%7D; Max-Age=2592000; Path=/; Expires=Tue, 23 Mar 2021 05:11:02 GMT; HttpOnly
+X-Powered-By: Express
+
+eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwczovL2hhc3VyYS5pby9qd3QvY2xhaW1zIjp7IngtaGFzdXJhLWFsbG93ZWQtcm9sZXMiOlsic3VwZXItdXNlciJdLCJ4LWhhc3VyYS1kZWZhdWx0LXJvbGUiOiJzdXBlci11c2VyIiwieC1oYXN1cmEtcm9sZSI6InN1cGVyLXVzZXIiLCJ4LWhhc3VyYS11c2VyLWlkIjoiMiJ9LCJjcmVhdGVkQnlJcCI6Ijo6ZmZmZjoxMjcuMC4wLjEiLCJzdWIiOiIyIiwiaWQiOiIyIiwiaWF0IjoxNjEzODg0MjYwLCJleHAiOjE2MTM4ODUxNjB9.60sEHTKgNLbzVDur-BbREEDTA_h0kC0OF1E7rkumdgA
+
+### /logout/:username
 Expects a GET request (body of request is ignored). Deletes all the refresh tokens for the provided username.
 
-# /webhook
+### /webhook
 Written to work with the Hasura webhook authorization option (for your Hasura database not the authorization database). Expects a GET request including standard HTTP Authorization headers (https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Authorization) which will have been forwarded by Hasura after a client request. 
 
-Responds with hasura variables, for example:
+test with HTTPie:
 ```
+http --auth Mum:password -v GET localhost:3000/webhook
+```
+Responds with hasura variables, for example (HTTPie output):
+```
+GET /webhook HTTP/1.1
+Accept: */*
+Accept-Encoding: gzip, deflate
+Authorization: Basic TXVtOnBhc3N3b3Jk
+Connection: keep-alive
+Host: localhost:3000
+User-Agent: HTTPie/1.0.3
+
+HTTP/1.1 200 OK
+Connection: keep-alive
+Content-Length: 53
+Content-Type: application/json; charset=utf-8
+Date: Sun, 21 Feb 2021 04:55:42 GMT
+ETag: W/"35-+Q3o1iDznRUfMpSQJeXwox+WfsY"
+Keep-Alive: timeout=5
+X-Powered-By: Express
+
 {
     "X-Hasura-Role": "super-user",
     "X-Hasura-User-Id": "2"
 }
-```
-test with HTTPie:
-```
-http --auth Mum:password -v GET localhost:3000/webhook
+
 ```
