@@ -68,7 +68,7 @@ X-Powered-By: Express
 eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwczovL2hhc3VyYS5pby9qd3QvY2xhaW1zIjp7IngtaGFzdXJhLWFsbG93ZWQtcm9sZXMiOlsic3VwZXItdXNlciJdLCJ4LWhhc3VyYS1kZWZhdWx0LXJvbGUiOiJzdXBlci11c2VyIiwieC1oYXN1cmEtcm9sZSI6InN1cGVyLXVzZXIiLCJ4LWhhc3VyYS11c2VyLWlkIjoiMiJ9LCJjcmVhdGVkQnlJcCI6Ijo6ZmZmZjoxMjcuMC4wLjEiLCJzdWIiOiIyIiwiaWQiOiIyIiwiaWF0IjoxNjEzODg0MDAzLCJleHAiOjE2MTM4ODQ5MDN9.Sb980Wk03wVJt7mrKt6eMEHkeqPonEpOPLJUcR-_2cA
 ```
 ### GET /refresh
-* Expects a GET request with the a refresh token in there as a HTTP-only cookie
+* Expects a GET request with a refresh token incuded as a HTTP-only cookie
 * Body of request is ignored.
 * Responds with a new JWT and new refresh token (in same format as with GET /login)
 
