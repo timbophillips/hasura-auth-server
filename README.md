@@ -1,4 +1,4 @@
-# Authorization server (Typescript | NodeJS | Apollo | Hasura)
+# Authorization server (TS | Node| Apollo | Hasura)
 * Aimed at Hasura but can be used for any JWT/refresh-token set up
 * Written in Typescript for NodeJS using Apollo to talk to a Hasura backend for the users database
 
