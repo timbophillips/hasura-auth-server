@@ -99,6 +99,13 @@ X-Powered-By: Express
 
 eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwczovL2hhc3VyYS5pby9qd3QvY2xhaW1zIjp7IngtaGFzdXJhLWFsbG93ZWQtcm9sZXMiOlsic3VwZXItdXNlciJdLCJ4LWhhc3VyYS1kZWZhdWx0LXJvbGUiOiJzdXBlci11c2VyIiwieC1oYXN1cmEtcm9sZSI6InN1cGVyLXVzZXIiLCJ4LWhhc3VyYS11c2VyLWlkIjoiMiJ9LCJjcmVhdGVkQnlJcCI6Ijo6ZmZmZjoxMjcuMC4wLjEiLCJzdWIiOiIyIiwiaWQiOiIyIiwiaWF0IjoxNjEzODg0MjYwLCJleHAiOjE2MTM4ODUxNjB9.60sEHTKgNLbzVDur-BbREEDTA_h0kC0OF1E7rkumdgA
 ```
+### Test that the provided JWT token works for accessing your Hasura database
+Use HTTPie to test the JWT token with the Hasura database server
+```
+TOKEN=$(http --session=/var/tmp/session.json -b GET localhost:3000/refresh)
+http -v POST $HASURA_SERVER_GRAPHQL_ENDPOINT Authorization:'Bearer '$(echo $TOKEN)  query="$GRAPHQL"
+```
+
 ### GET /logout/:username
 * Expects a GET request (body of request is ignored). 
 * Deletes all the refresh tokens for the provided username.
@@ -135,11 +142,6 @@ X-Powered-By: Express
 }
 ```
 
-You can then use HTTPie again to test the JWT token with the Hasura database server
-```
-TOKEN=$(http --session=/var/tmp/session.json -b GET localhost:3000/refresh)
-http -v POST $HASURA_SERVER_GRAPHQL_ENDPOINT Authorization:'Bearer '$(echo $TOKEN)  query="$GRAPHQL"
-```
 
 ### POST /changepassword
 
