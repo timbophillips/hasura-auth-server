@@ -16,7 +16,7 @@ example:
     "username": "Dad"
 },
 ```
-There are also sample hasura PSQL dump and metadata JSON files you can use to create a users database quickly
+There are also sample hasura PSQL dump and metadata JSON files in `src/database` you can use to create a users database quickly
 
 ## To use
 ```
