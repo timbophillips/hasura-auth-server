@@ -16,6 +16,7 @@ Promise<{ username: string; nudePassword: string }> {
   // Split by [space] to separate <type> (eg 'Basic') from the
   // base64 encoded <credentials> which should be in username:password format
   // and decode the base64 back to ascii and stick into two strings
+  console.log(`Authorization header = ${authorizationHeaderField}`);
   const [username, nudePassword] = atob(
     authorizationHeaderField.split(' ')[1] || ''
   )

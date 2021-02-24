@@ -63,13 +63,15 @@ const RespondWithTokens = (
   tokens: {
     jwt: string;
     refresh_token: RefreshToken;
+    username: string;
+    id: number;
   },
   response: Response
 ) => {
   response
     .cookie('refresh-token', tokens.refresh_token, cookieOptions)
     .status(200)
-    .send(tokens.jwt);
+    .send({ jwt: tokens.jwt, username: tokens.username, id: tokens.id });
   console.log(
     response.headersSent
       ? 'response headers sent'
