@@ -25,7 +25,7 @@ http --session=/var/tmp/session.json --auth $USERNAME:$PASSWORD -v GET $AUTH_SER
 http --session=/var/tmp/session.json -v GET $AUTH_SERVER/refresh
 
 # do it again but this time save it to a variable
-TOKEN=$(http --session=/var/tmp/session.json -b GET $AUTH_SERVER/refresh)
+TOKEN=$(http --session=/var/tmp/session.json -b GET $AUTH_SERVER/refresh | jq -r '.jwt')
 
 # now use that variable to make a GraphQL query
 http -v POST $GRAPHQL_SERVER Authorization:'Bearer '$(echo $TOKEN)  query="$GRAPHQL_QUERY"

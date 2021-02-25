@@ -14,6 +14,6 @@ export function HasuraWebhook(request: Request, response: Response): void {
     })
     .catch((error: Error) => {
       console.error(error.message);
-      response.status(401).json({ error: error.message });
+      response.status(401).send(error.message);
     });
 }

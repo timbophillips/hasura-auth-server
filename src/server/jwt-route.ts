@@ -25,7 +25,7 @@ export function CheckCredentialsAndIssueTokens(
     .then((tokens) => RespondWithTokens(tokens, response))
     .catch((error: Error) => {
       console.error(error.stack);
-      response.status(401).json({ error: error.message });
+      response.status(401).send(error.message);
     });
 }
 
@@ -40,7 +40,7 @@ export function CheckRefreshTokenAndIssueTokens(
     .then((tokens) => RespondWithTokens(tokens, response))
     .catch((error: Error) => {
       console.error(error.stack);
-      response.status(401).json({ error: error.message });
+      response.status(401).send(error.message);
     });
 }
 
