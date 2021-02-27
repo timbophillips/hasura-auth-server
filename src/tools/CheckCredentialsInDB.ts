@@ -13,7 +13,7 @@ export async function CheckCredentialsInDB(credentials: {
       );
       return RemovePasswordFromUser(userFromDB);
     } else {
-      throw new Error('username found but password incorrect');
+      throw new Error('password');
     }
   });
 }

@@ -49,10 +49,13 @@ export function DeleteAllRefreshTokensForUser(
   // eslint-disable-next-line @typescript-eslint/no-unused-vars, no-unused-vars
   response: Response
 ): void {
-  Promise.resolve(request.params['username'])
+  const username = request.params['username'];
+  Promise.resolve(username)
     .then(GetUser)
     .then((user) => DeleteAllTokensOfUser(user.id))
-    .then((tokens) => response.status(200).json({ 'deleted-tokens': tokens }))
+    .then((tokens) =>
+      response.status(200).json({ tokens: tokens, username: username })
+    )
     .catch((error: Error) => {
       console.error(error.stack);
       response.status(401).json({ error: error.stack });

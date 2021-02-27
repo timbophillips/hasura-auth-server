@@ -71,7 +71,7 @@ export async function GetUser(username: string): Promise<User> {
     console.log(`username ${username} matched to userID=${user.id} in DB`);
     return user;
   } else {
-    throw new Error('username not found in database');
+    throw new Error('username');
   }
 }
 export async function GetUserWithoutPassword(
