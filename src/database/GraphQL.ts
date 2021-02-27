@@ -206,7 +206,7 @@ export async function GetRefreshToken(
   if (token) {
     return token;
   } else {
-    throw new Error('token not found in database');
+    throw new Error('token not found');
   }
 }
 export async function DeleteToken(tokenString: string): Promise<RefreshToken> {
