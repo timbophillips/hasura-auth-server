@@ -58,6 +58,11 @@ app.get('/login', CheckCredentialsAndIssueTokens);
 // include refresh token in json refreshtoken=xxx
 app.get('/refresh', CheckRefreshTokenAndIssueTokens);
 
+// this route will try and work out
+// who was "logged on " on the client
+// based on the refreshToken in the cookie
+app.get('/logout', DeleteAllRefreshTokensForUser);
+
 // include refresh token in json refreshtoken=xxx
 // and then all the user's tokens will be deleted
 // (for logging out)

@@ -29,6 +29,27 @@ export function CheckCredentialsAndIssueTokens(
     });
 }
 
+export function GetUserFromRefreshTokenAndThenDeleteAllTokens(
+  request: Request,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars, no-unused-vars
+  response: Response
+): void {
+  let username: string;
+  Promise.resolve(request.cookies['refresh-token']['token'])
+    .then(CheckRefreshToken)
+    .then((user) => {
+      username = user.username;
+      DeleteAllTokensOfUser(user.id);
+    })
+    .then((tokens) =>
+      response.status(200).json({ tokens: tokens, username: username })
+    )
+    .catch((error: Error) => {
+      console.error(error.stack);
+      response.status(401).json({ error: error.stack });
+    });
+}
+
 export function CheckRefreshTokenAndIssueTokens(
   request: Request,
   // eslint-disable-next-line @typescript-eslint/no-unused-vars, no-unused-vars
