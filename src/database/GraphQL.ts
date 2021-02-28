@@ -206,7 +206,7 @@ export async function GetRefreshToken(
   if (token) {
     return token;
   } else {
-    throw new Error('token not found');
+    throw new Error('invalid');
   }
 }
 export async function DeleteToken(tokenString: string): Promise<RefreshToken> {
