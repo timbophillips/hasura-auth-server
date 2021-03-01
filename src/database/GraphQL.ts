@@ -68,7 +68,7 @@ export async function GetUser(username: string): Promise<User> {
   });
   const user = result.data['users'][0] as User | undefined;
   if (user) {
-    console.log(`username ${username} matched to userID=${user.id} in DB`);
+    console.log(`username ${user.username} matched to userID=${user.id} in DB`);
     return user;
   } else {
     throw new Error('username');
