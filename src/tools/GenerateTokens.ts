@@ -9,6 +9,7 @@ export async function GenerateTokens(
   refresh_token: RefreshToken;
   username: string;
   id: number;
+  role: string;
 }> {
   const [jwt, refreshToken] = await Promise.all([
     generateJWT(user, ip),
@@ -20,5 +21,6 @@ export async function GenerateTokens(
     refresh_token: refreshToken,
     username: user.username,
     id: user.id,
+    role: user.role,
   };
 }
